@@ -783,9 +783,9 @@ bootstrap_virtualenv () {
   if [ -z ${VIRTUAL_ENV:-} ]; then NESTED="--user" ; else NESTED=""; fi
 
   for pkg in             \
-      setuptools==18.5    \
-      pip==9.0.1          \
-      virtualenv==15.0.2  \
+      setuptools==43.0.0    \
+      pip==20.1.1          \
+      virtualenv==16.7.9  \
   ; do
       ruler "Installing ${pkg}";
       "${bootstrap_python}" -m pip install -I ${NESTED} "${pkg}";
