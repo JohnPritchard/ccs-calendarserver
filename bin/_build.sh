@@ -514,7 +514,7 @@ c_dependencies () {
   if [ "${use_openssl}" = "true" ]; then
     ruler;
 
-    local min_ssl_version="268443791";  # OpenSSL 1.0.2h
+    local min_ssl_version="268443791";  # OpenSSL 1.1.1g
 
     local ssl_version="$(c_macro openssl/ssl.h OPENSSL_VERSION_NUMBER)";
     if [ -z "${ssl_version}" ]; then ssl_version="0x0"; fi;
@@ -523,13 +523,13 @@ c_dependencies () {
     if [ "${ssl_version}" -ge "${min_ssl_version}" ]; then
       using_system "OpenSSL";
     else
-      local v="1.0.2h";
+      local v="1.1.1g";
       local n="openssl";
       local p="${n}-${v}";
 
       # use 'config' instead of 'configure'; 'make' instead of 'jmake'.
       # also pass 'shared' to config to build shared libs.
-      c_dependency -c "config" -s "577585f5f5d299c44dd3c993d3c0ac7a219e4949" \
+      c_dependency -c "config" -s "b213a293f2127ec3e323fb3cfc0c9807664fd997" \
         -p "make depend" -b "make" \
         "openssl" "${p}" \
         "http://www.openssl.org/source/${p}.tar.gz" "shared";
@@ -597,7 +597,7 @@ c_dependencies () {
   if command -v memcached > /dev/null; then
     using_system "memcached";
   else
-    local v="2.0.21-stable";
+    local v="2.1.12-stable";
     local n="libevent";
     local p="${n}-${v}";
 
@@ -606,16 +606,16 @@ c_dependencies () {
 	  local configure_openssl="--enable-openssl=no";
 	fi;
 
-    c_dependency -m "b2405cc9ebf264aa47ff615d9de527a2" \
+    c_dependency -m "b5333f021f880fe76490d8a799cd79f4" \
       "libevent" "${p}" \
-      "https://github.com/downloads/libevent/libevent/${p}.tar.gz" \
+      "https://github.com/libevent/libevent/releases/download/release-${v}/${p}.tar.gz" \
       ${configure_openssl};
 
-    local v="1.4.24";
+    local v="1.6.6";
     local n="memcached";
     local p="${n}-${v}";
 
-    c_dependency -s "32a798a37ef782da10a09d74aa1e5be91f2861db" \
+    c_dependency -s "d8895b12dc9fc82b389f1713e2c09cc6ca3d03e4" \
       "memcached" "${p}" \
       "http://www.memcached.org/files/${p}.tar.gz" \
       "--disable-docs";
@@ -626,7 +626,7 @@ c_dependencies () {
   if command -v postgres > /dev/null; then
     using_system "Postgres";
   else
-    local v="9.5.3";
+    local v="9.5.22";
     local n="postgresql";
     local p="${n}-${v}";
 
@@ -636,7 +636,7 @@ c_dependencies () {
       local enable_dtrace="";
     fi;
 
-    c_dependency -m "3f0c388566c688c82b01a0edf1e6b7a0" \
+    c_dependency -m "02084251100fe57665610f73ef448b16" \
       "PostgreSQL" "${p}" \
       "http://ftp.postgresql.org/pub/source/v${v}/${p}.tar.bz2" \
       ${enable_dtrace};
