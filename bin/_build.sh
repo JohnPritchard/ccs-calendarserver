@@ -782,10 +782,10 @@ bootstrap_virtualenv () {
   # If we're already in a venv, don't use --user flag for pip install
   if [ -z ${VIRTUAL_ENV:-} ]; then NESTED="--user" ; else NESTED=""; fi
 
-  for pkg in             \
-      setuptools==43.0.0    \
-      pip==20.1.1          \
-      virtualenv==16.7.9  \
+  for pkg in              \
+      setuptools==44.1.1  \
+      pip==20.3.3         \
+      virtualenv==16.7.10 \
   ; do
       ruler "Installing ${pkg}";
       "${bootstrap_python}" -m pip install -I ${NESTED} "${pkg}";
