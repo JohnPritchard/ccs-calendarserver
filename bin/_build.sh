@@ -636,7 +636,7 @@ c_dependencies () {
       local enable_dtrace="";
     fi;
 
-    c_dependency -m "9d1efcdb439172c37f7fbb10e5e0836f6ba9d710" \
+    c_dependency -m "3e86e1016baefe6581b6d136367589a4" \
       "PostgreSQL" "${p}" \
       "http://ftp.postgresql.org/pub/source/v${v}/${p}.tar.bz2" \
       ${enable_dtrace};
