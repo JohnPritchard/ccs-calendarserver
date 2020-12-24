@@ -523,13 +523,13 @@ c_dependencies () {
     if [ "${ssl_version}" -ge "${min_ssl_version}" ]; then
       using_system "OpenSSL";
     else
-      local v="1.1.1g";
+      local v="1.1.1i";
       local n="openssl";
       local p="${n}-${v}";
 
       # use 'config' instead of 'configure'; 'make' instead of 'jmake'.
       # also pass 'shared' to config to build shared libs.
-      c_dependency -c "config" -s "b213a293f2127ec3e323fb3cfc0c9807664fd997" \
+      c_dependency -c "config" -s "eb684ba4ed31fe2c48062aead75233ecd36882a6" \
         -p "make depend" -b "make" \
         "openssl" "${p}" \
         "http://www.openssl.org/source/${p}.tar.gz" "shared";
@@ -626,7 +626,7 @@ c_dependencies () {
   if command -v postgres > /dev/null; then
     using_system "Postgres";
   else
-    local v="9.5.22";
+    local v="9.5.24";
     local n="postgresql";
     local p="${n}-${v}";
 
@@ -636,7 +636,7 @@ c_dependencies () {
       local enable_dtrace="";
     fi;
 
-    c_dependency -m "02084251100fe57665610f73ef448b16" \
+    c_dependency -m "9d1efcdb439172c37f7fbb10e5e0836f6ba9d710" \
       "PostgreSQL" "${p}" \
       "http://ftp.postgresql.org/pub/source/v${v}/${p}.tar.bz2" \
       ${enable_dtrace};
