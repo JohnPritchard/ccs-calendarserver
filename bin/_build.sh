@@ -626,7 +626,7 @@ c_dependencies () {
   if command -v postgres > /dev/null; then
     using_system "Postgres";
   else
-    local v="9.5.24";
+    local v="13.1";
     local n="postgresql";
     local p="${n}-${v}";
 
@@ -636,7 +636,7 @@ c_dependencies () {
       local enable_dtrace="";
     fi;
 
-    c_dependency -m "3e86e1016baefe6581b6d136367589a4" \
+    c_dependency -m "d843a4fcc0ed1493511028aa6c17117a" \
       "PostgreSQL" "${p}" \
       "http://ftp.postgresql.org/pub/source/v${v}/${p}.tar.bz2" \
       ${enable_dtrace};
