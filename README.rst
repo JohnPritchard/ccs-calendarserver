@@ -1,4 +1,14 @@
 ==========================
+Forked to try to keep it going beyond the last supported macOS Server version...
+==========================
+
+I have forked this project in an effort to keep it going for my own purposes.
+
+You may use it as it is, but I give no guarantee in any way shape or form that it will work for you, and in no way can I be
+held liable for any loss of data, hardware or any other kind of loss you may suffer from using this modified version of the
+software.
+
+==========================
 Notice of Archival
 ==========================
 

@@ -207,8 +207,13 @@ class DirectoryMemcacher(object):
         @raise: L{DirectoryMemcacheError} if failure to read from memcache
         """
 
-        pickled = self.memcacheGet(key)
-        return self.unpickleRecord(pickled) if pickled is not None else None
+        try :
+            pickled = self.memcacheGet(key)
+            return self.unpickleRecord(pickled) if pickled is not None else None
+        except Exception as e :
+            log.error('memcache returned non-ODRecord')
+            log.error('%s' %(str(e)))
+            return None
 
     def memcacheGet(self, key):
         """
