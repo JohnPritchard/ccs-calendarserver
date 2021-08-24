@@ -17,7 +17,6 @@
 
 . "${wd}/bin/_py.sh";
 
-
 # Provide a default value: if the variable named by the first argument is
 # empty, set it to the default in the second argument.
 conditional_set () {
@@ -697,11 +696,15 @@ py_dependencies () {
 
   if [ ! -d "${py_virtualenv}" ]; then
     bootstrap_virtualenv;
+    export
+    pwd
     "${bootstrap_python}" -m virtualenv  \
       --system-site-packages             \
       --no-setuptools                    \
       ${virtualenv_opts}                 \
       "${py_virtualenv}";
+    codesign -s - -f "${py_virtualenv}"/bin/python
+    #unset PYTHONUSERBASE
     if [ "${use_openssl}" = "false" ]; then
       # Interacting with keychain requires either a valid code signature, or no
       # code signature. An *invalid* code signature won't work.
@@ -731,7 +734,9 @@ EOF
 
   ruler "Preparing Python requirements";
   echo "";
-  "${pip_install}" --requirement="${requirements}";
+  export
+  pwd
+  "${pip_install}" --prefix="${py_virtualenv}" --requirement="${requirements}";
 
   for extra in $("${bootstrap_python}" -c 'import setup; print "\n".join(setup.extras_requirements.keys())'); do
     ruler "Preparing Python requirements for optional feature: ${extra}";
@@ -748,7 +753,7 @@ EOF
 
   ruler "Preparing Python requirements for patching";
   echo "";
-  "${pip_install}" --ignore-installed --no-deps --requirement="${wd}/requirements-ignore-installed.txt";
+  "${pip_install}" --prefix="${py_virtualenv}" --ignore-installed --no-deps --requirement="${wd}/requirements-ignore-installed.txt";
 
   ruler "Patching Python requirements";
   echo "";
@@ -784,8 +789,8 @@ bootstrap_virtualenv () {
 
   for pkg in              \
       setuptools==44.1.1  \
-      pip==20.3.3         \
-      virtualenv==16.7.10 \
+      pip==20.3.4         \
+      virtualenv==20.7.2  \
   ; do
       ruler "Installing ${pkg}";
       "${bootstrap_python}" -m pip install -I ${NESTED} "${pkg}";
