@@ -523,13 +523,13 @@ c_dependencies () {
     if [ "${ssl_version}" -ge "${min_ssl_version}" ]; then
       using_system "OpenSSL";
     else
-      local v="1.1.1g";
+      local v="1.1.1i";
       local n="openssl";
       local p="${n}-${v}";
 
       # use 'config' instead of 'configure'; 'make' instead of 'jmake'.
       # also pass 'shared' to config to build shared libs.
-      c_dependency -c "config" -s "b213a293f2127ec3e323fb3cfc0c9807664fd997" \
+      c_dependency -c "config" -s "eb684ba4ed31fe2c48062aead75233ecd36882a6" \
         -p "make depend" -b "make" \
         "openssl" "${p}" \
         "http://www.openssl.org/source/${p}.tar.gz" "shared";
@@ -626,7 +626,7 @@ c_dependencies () {
   if command -v postgres > /dev/null; then
     using_system "Postgres";
   else
-    local v="9.5.22";
+    local v="13.1";
     local n="postgresql";
     local p="${n}-${v}";
 
@@ -636,7 +636,7 @@ c_dependencies () {
       local enable_dtrace="";
     fi;
 
-    c_dependency -m "02084251100fe57665610f73ef448b16" \
+    c_dependency -m "d843a4fcc0ed1493511028aa6c17117a" \
       "PostgreSQL" "${p}" \
       "http://ftp.postgresql.org/pub/source/v${v}/${p}.tar.bz2" \
       ${enable_dtrace};
@@ -782,10 +782,10 @@ bootstrap_virtualenv () {
   # If we're already in a venv, don't use --user flag for pip install
   if [ -z ${VIRTUAL_ENV:-} ]; then NESTED="--user" ; else NESTED=""; fi
 
-  for pkg in             \
-      setuptools==43.0.0    \
-      pip==20.1.1          \
-      virtualenv==16.7.9  \
+  for pkg in              \
+      setuptools==44.1.1  \
+      pip==20.3.3         \
+      virtualenv==16.7.10 \
   ; do
       ruler "Installing ${pkg}";
       "${bootstrap_python}" -m pip install -I ${NESTED} "${pkg}";
