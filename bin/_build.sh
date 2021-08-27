@@ -703,7 +703,7 @@ py_dependencies () {
       --no-setuptools                    \
       ${virtualenv_opts}                 \
       "${py_virtualenv}";
-    codesign -s - -f "${py_virtualenv}"/bin/python
+    #codesign -s - -f "${py_virtualenv}"/bin/python
     #unset PYTHONUSERBASE
     if [ "${use_openssl}" = "false" ]; then
       # Interacting with keychain requires either a valid code signature, or no
@@ -790,7 +790,7 @@ bootstrap_virtualenv () {
   for pkg in              \
       setuptools==44.1.1  \
       pip==20.3.4         \
-      virtualenv==20.7.2  \
+      git+https://github.com/JohnPritchard/virtualenv.git@16.7.12.1 \
   ; do
       ruler "Installing ${pkg}";
       "${bootstrap_python}" -m pip install -I ${NESTED} "${pkg}";
