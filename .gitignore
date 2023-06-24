@@ -8,6 +8,7 @@ dropin.cache
 *~
 *.lock
 /.develop/
+/.vscode/
 /data/
 /bin/calendarserver_*
 /calendarserver/version.py
