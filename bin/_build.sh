@@ -610,11 +610,11 @@ c_dependencies () {
       "https://github.com/libevent/libevent/releases/download/release-${v}/${p}.tar.gz" \
       ${configure_openssl};
 
-    local v="1.6.6";
+    local v="1.6.23";
     local n="memcached";
     local p="${n}-${v}";
 
-    c_dependency -s "d8895b12dc9fc82b389f1713e2c09cc6ca3d03e4" \
+    c_dependency -s "d5490856170453b15a782ad55ffdea188c2eade0" \
       "memcached" "${p}" \
       "http://www.memcached.org/files/${p}.tar.gz" \
       "--disable-docs";
