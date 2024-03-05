@@ -116,7 +116,7 @@ main () {
   #virtualenv_opts="";
 
 
-  #c_dependencies;
+  c_dependencies;
   py_dependencies;
 
   install -d "${destination}/bin";

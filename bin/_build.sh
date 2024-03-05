@@ -841,7 +841,7 @@ pip_download_and_install () {
 #
 develop () {
   init_build;
-  #c_dependencies;
+  c_dependencies;
   py_dependencies;
   macos_oracle;
 }
