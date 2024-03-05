@@ -700,9 +700,9 @@ py_dependencies () {
     pwd
     "${bootstrap_python}" -m virtualenv  \
       --system-site-packages             \
-      --no-setuptools                    \
       ${virtualenv_opts}                 \
       "${py_virtualenv}";
+    #  --no-setuptools                    \
     #codesign -s - -f "${py_virtualenv}"/bin/python
     #unset PYTHONUSERBASE
     if [ "${use_openssl}" = "false" ]; then
@@ -841,7 +841,7 @@ pip_download_and_install () {
 #
 develop () {
   init_build;
-  c_dependencies;
+  #c_dependencies;
   py_dependencies;
   macos_oracle;
 }
