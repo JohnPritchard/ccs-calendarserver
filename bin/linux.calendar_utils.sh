@@ -1,10 +1,12 @@
 ## "@(#) $Id: macOSX.Apple_ccs_to_vjpd_ccs_migration 3991 2022-03-14 10:07:32Z vdoublie $"
 
+__pwd=$(pwd)
 _SUDO=$(which sudo 2>/dev/null)
 _SUDO_ccs_user=${_SUDO:+${_SUDO} -u ${ccs_user}}
 ################################################################################
 # Before building...
 pre_build() {
+  cd ${__pwd}
   ## Stop any running instance of the Calendar & Contacts
   if which serveradmin > /dev/null 2>&1 ; then
     execCmd "${_SUDO:+${_SUDO} }serveradmin stop calendar"
@@ -66,6 +68,7 @@ pre_build() {
 ################################################################################
 # Build
 build_server() {
+  cd ${__pwd}
   _pwd=$(pwd)
   ! grep PATH.\*${_pwd}}/Library/Python/2.7/bin .profile >/dev/null 2>&1 && \
     execCmd "echo 'export PATH=${_pwd}/Library/Python/2.7/bin:$(getconf PATH)' > .profile"
@@ -110,8 +113,8 @@ build_server() {
 ################################################################################
 # Configure
 configure_server() {
+  cd ${__pwd}
   _pwd=$(pwd)
-  cd "${_pwd}"
   execCmd "ln -fsv ${ccs_ver}/CalendarServer CalendarServer"
   execCmd "cd "${_pwd}"/${ccs_ver}/CalendarServer"
   execCmd "mkdir conf run logs{,_debug} certs"
@@ -142,6 +145,7 @@ configure_server() {
 ################################################################################
 # Create self-signed Certificates
 create_self_signed_certs() {
+  cd ${__pwd}
   _pwd=$(pwd)
   execCmd "cd "${_pwd}"/CalendarServer/certs" || exit 1
   cert_dt=$(date +%Y-%m-%dT%H:%M:%S%z)
@@ -174,6 +178,7 @@ create_self_signed_certs() {
 # Upgrade postgresql DB from 9.4 to 9.5/13.1...
 # If the old_PG_VERSION < the server's PG version, we need to upgrade...
 upgrade_database() {
+  cd ${__pwd}
 
   ## An existing database...
   # If it exists, extract a tgz Archive version of the database...
@@ -320,6 +325,7 @@ upgrade_database() {
 ################################################################################
 ## Enable in launchctl
 enable_in_launchctl() {
+  cd ${__pwd}
   cd ~calendarserver/${ccs_ver}/CalendarServer/conf
   execCmd "chown root:wheel org.calendarserver.plist"
   if [ ! -e /Library/LaunchDaemons/org.calendarserver.plist ] || \
