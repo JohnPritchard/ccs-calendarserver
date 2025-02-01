@@ -14,7 +14,7 @@ RUN apt install -y \
     pkg-config \
     rsync \
     sudo
-#RUN apt remove -y python2.7-minimal
+RUN apt remove -y python2.7-minimal
 RUN apt -y autoremove
 RUN ln -s /usr/local/bin/python2.7 /usr/bin/python2.7
 RUN ln -s /usr/local/bin/python2.7 /usr/bin/python
