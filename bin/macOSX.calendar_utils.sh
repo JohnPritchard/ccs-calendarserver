@@ -19,36 +19,38 @@ pre_build() {
   # Create an admin ${ccs_user:-calendarserver} user and group if necessary
   ## Some interesting things here...
   ## https://github.com/essandess/macOS-Open-Source-Server/blob/master/macOS%20Server%20Migration%20Notes.md#calendar-and-contacts
-  if ! dscl . -list /Users | grep ^${ccs_user}$ > /dev/null 2>&1 ; then
-    # see https://gist.github.com/steakknife/941862
-    ## Next free UID and GID starting at 200...
-    NEXTUID=$(dscl . -list /Users UniqueID | sort -n -k2 | awk 'BEGIN{i=200}{if($2==i)i=$2+1}END{print i}')
-    NEXTGID=$(dscl . -list /Groups UniqueID | sort -n -k2 | awk 'BEGIN{i=200}{if($2==i)i=$2+1}END{print i}')
-    # First create the group, if needed...
-    if ! dscl . -list /Groups | grep ^${ccs_group:-${ccs_user}}$ > /dev/null 2>&1 ; then
-      execCmd "sudo dscl . -create /Groups/${ccs_group:-${ccs_user}} \
-        PrimaryGroupID ${NEXTGID} \
+  if which dscl >/dev/null 2>&1 ; then
+    if ! dscl . -list /Users | grep ^${ccs_user}$ > /dev/null 2>&1 ; then
+      # see https://gist.github.com/steakknife/941862
+      ## Next free UID and GID starting at 200...
+      NEXTUID=$(dscl . -list /Users UniqueID | sort -n -k2 | awk 'BEGIN{i=200}{if($2==i)i=$2+1}END{print i}')
+      NEXTGID=$(dscl . -list /Groups UniqueID | sort -n -k2 | awk 'BEGIN{i=200}{if($2==i)i=$2+1}END{print i}')
+      # First create the group, if needed...
+      if ! dscl . -list /Groups | grep ^${ccs_group:-${ccs_user}}$ > /dev/null 2>&1 ; then
+        execCmd "sudo dscl . -create /Groups/${ccs_group:-${ccs_user}} \
+          PrimaryGroupID ${NEXTGID} \
+        "
+        execCmd "sudo dscl . -create /Groups/${ccs_group:-${ccs_user}} \
+          RecordName ${ccs_group:-${ccs_user}} \
+        "
+      fi
+      # Then the user...
+      execCmd "sudo dscl . -create /Users/${ccs_user} \
+        RealName ${ccs_user} \
       "
-      execCmd "sudo dscl . -create /Groups/${ccs_group:-${ccs_user}} \
-        RecordName ${ccs_group:-${ccs_user}} \
+      execCmd "sudo dscl . -create /Users/${ccs_user} \
+        UniqueID ${NEXTUID} \
+      "
+      execCmd "sudo dscl . -create /Users/${ccs_user} \
+        PrimaryGroupID ${ccs_group:-${ccs_user}} \
+      "
+      execCmd "sudo dscl . -create /Users/${ccs_user} \
+        NFSHomeDirectory /private/var/${ccs_user} \
+      "
+      execCmd "sudo dscl . -create /Users/${ccs_user} \
+        UserShell /bin/bash \
       "
     fi
-    # Then the user...
-    execCmd "sudo dscl . -create /Users/${ccs_user} \
-      RealName ${ccs_user} \
-    "
-    execCmd "sudo dscl . -create /Users/${ccs_user} \
-      UniqueID ${NEXTUID} \
-    "
-    execCmd "sudo dscl . -create /Users/${ccs_user} \
-      PrimaryGroupID ${ccs_group:-${ccs_user}} \
-    "
-    execCmd "sudo dscl . -create /Users/${ccs_user} \
-      NFSHomeDirectory /private/var/${ccs_user} \
-    "
-    execCmd "sudo dscl . -create /Users/${ccs_user} \
-      UserShell /bin/bash \
-    "
   fi
   execCmd "sudo mkdir -p /private/var/${ccs_user}"
   execCmd "sudo chown -R ${ccs_user}:${ccs_group:-${ccs_user}} /private/var/${ccs_user}"
