@@ -5,11 +5,11 @@ WORKDIR /opt/ccs-calendarserver
 RUN apt update
 RUN apt install -y \
     automake \
-    autotools \
-    g++ \
     bash \
     coreutils \
+    g++ \
     git \
+    libtool \
     rsync \
     sudo
 
