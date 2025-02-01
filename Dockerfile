@@ -4,7 +4,7 @@ WORKDIR /opt/ccs-calendarserver
 # prepare the system...
 RUN apt install -y \
     git \
-    coreutils \
+    coreutils
 
 
 # Setup an app user so the container doesn't run as the root user
