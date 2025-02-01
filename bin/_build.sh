@@ -462,6 +462,7 @@ c_dependency () {
     if [ ! -d "${dstroot}" ]; then
       echo "Building ${name}...";
       cd "${srcdir}";
+      [ -e "./${configure}" ] && autoreconf -fiv
       "./${configure}" --prefix="${dstroot}" "$@";
       if [ ! -z "${prebuild_cmd}" ]; then
         eval ${prebuild_cmd};
