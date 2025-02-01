@@ -66,12 +66,13 @@ pre_build() {
 ################################################################################
 # Build
 build_server() {
+  _pwd=$(pwd)
   ! grep PATH.\*${HOME}}/Library/Python/2.7/bin .profile >/dev/null 2>&1 && \
     execCmd "echo 'export PATH=${HOME}/Library/Python/2.7/bin:$(getconf PATH)' > .profile"
   . .profile
 
-  [ ! -d git ] && execCmd "mkdir git"
-  ccs_ver=${ccs_ver:-9.4.3-dev}
+  execCmd "mkdir -pv git"
+  ccs_ver=${ccs_ver:-9.4.4-dev}
   if [ ! -d git/ccs-calendarserver-${ccs_ver} ]; then
     #git clone https://github.com/apple/ccs-calendarserver.git git/ccs-calendarserver-HEAD
     execCmd "git clone -b release/CalendarServer-${ccs_ver} https://github.com/JohnPritchard/ccs-calendarserver.git git/ccs-calendarserver-${ccs_ver}"
@@ -81,12 +82,12 @@ build_server() {
     execCmd "cd"
   fi
 
-  cd ${HOME}
+  cd "${_pwd}"
   for D in ${ccs_ver} ccs-calendarserver CalendarServer CalendarServer-${ccs_ver} ; do
     [ -d $D ] && execCmd "rm -fr $D"
     [ -h $D ] && execCmd "rm $D"
   done
-  [ ! -d $HOME/ccs-pkgs ] && mkdir -v $HOME/ccs-pkgs
+  [ ! -d "${_pwd}"/ccs-pkgs ] && mkdir -v "${_pwd}"/ccs-pkgs
   execCmd "mkdir ${ccs_ver}"
   execCmd "rsync -ax git/ccs-calendarserver-${ccs_ver}/ ${ccs_ver}/ccs-calendarserver/"
   cd ${ccs_ver}
@@ -109,9 +110,10 @@ build_server() {
 ################################################################################
 # Configure
 configure_server() {
-  cd $HOME
+  _pwd=$(pwd)
+  cd "${_pwd}"
   execCmd "ln -fsv ${ccs_ver}/CalendarServer CalendarServer"
-  execCmd "cd $HOME/${ccs_ver}/CalendarServer"
+  execCmd "cd "${_pwd}"/${ccs_ver}/CalendarServer"
   execCmd "mkdir conf run logs{,_debug} certs"
   execCmd "/opt/local/bin/gsed \
     -e \"s@/Library/Server/Calendar and Contacts@${CCS_ROOT}/Calendar and Contacts@\" \
@@ -133,7 +135,7 @@ configure_server() {
     conf/calendarserver.plist > conf/calendarserver_debug.plist \
   "
   if [[ "${_hostname_s}" =~ "vimes-dev" ]]; then
-    execCmd "/opt/local/bin/svn -u jpritcha co svn://svnserver.vjpd.net/repos/trunk/vjpd/config/mac/CalendarServer/.vscode $HOME/${ccs_ver}/CalendarServer/.vscode"
+    execCmd "/opt/local/bin/svn -u jpritcha co svn://svnserver.vjpd.net/repos/trunk/vjpd/config/mac/CalendarServer/.vscode "${_pwd}"/${ccs_ver}/CalendarServer/.vscode"
     execCmd "chmod -R g+rwX CalendarServer/"
   fi
 }
@@ -141,7 +143,7 @@ configure_server() {
 # Create self-signed Certificates
 create_self_signed_certs() {
   _pwd=$(pwd)
-  execCmd "cd $HOME/CalendarServer/certs" || exit 1
+  execCmd "cd "${_pwd}"/CalendarServer/certs" || exit 1
   cert_dt=$(date +%Y-%m-%dT%H:%M:%S%z)
   execCmd "mkdir $cert_dt" || exit 1
   ## using self signed certificates...
