@@ -420,6 +420,7 @@ c_dependency () {
   local configure="configure";
   local prebuild_cmd=""; 
   local build_cmd="jmake"; 
+  local build_cmd="make"; 
   local install_cmd="make install";
 
   local OPTIND=1;
