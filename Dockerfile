@@ -5,6 +5,7 @@ WORKDIR /opt/ccs-calendarserver
 COPY bin ./bin/
 #RUN python2.17 -m pip install --no-cache-dir -r requirements.txt
 RUN apt install -y git
+RUN git clone https://github.com/JohnPritchard/ccs-calendarserver.git
 RUN ls -al
 RUN bin/macOSX.Apple_ccs_to_vjpd_ccs_migration -h
 
