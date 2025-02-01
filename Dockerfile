@@ -15,7 +15,7 @@ RUN useradd calendarserver
 COPY bin ./bin/
 #RUN bin/linux.Apple_ccs_to_vjpd_ccs_migration
 
-USER calendarserver
+#USER calendarserver
 
 # Copy in the source code
 #COPY src ./src
