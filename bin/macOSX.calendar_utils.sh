@@ -21,7 +21,7 @@ pre_build() {
   # Create an admin ${ccs_user:-calendarserver} user and group if necessary
   ## Some interesting things here...
   ## https://github.com/essandess/macOS-Open-Source-Server/blob/master/macOS%20Server%20Migration%20Notes.md#calendar-and-contacts
-  if which dscl >/dev/null 2>&1 ; then
+  if [ $(uname) != "Linux" ] ; then
     if ! dscl . -list /Users | grep ^${ccs_user}$ > /dev/null 2>&1 ; then
       # see https://gist.github.com/steakknife/941862
       ## Next free UID and GID starting at 200...
@@ -53,15 +53,15 @@ pre_build() {
         UserShell /bin/bash \
       "
     fi
+    execCmd "${_SUDO:+${_SUDO} }mkdir -p /private/var/${ccs_user}"
+    execCmd "${_SUDO:+${_SUDO} }chown -R ${ccs_user}:${ccs_group:-${ccs_user}} /private/var/${ccs_user}"
+    execCmd "${_SUDO:+${_SUDO} }chmod 0750 /private/var/${ccs_user}"
+    for G in certusers _postgres ; do
+      if ! dscl . -read /Groups/${G} GroupMembership | grep ${ccs_user}  > /dev/null 2>&1 ; then
+        execCmd "${_SUDO:+${_SUDO} }dscl . -append /Groups/${G} GroupMembership ${ccs_user}"
+      fi
+    done
   fi
-  execCmd "${_SUDO:+${_SUDO} }mkdir -p /private/var/${ccs_user}"
-  execCmd "${_SUDO:+${_SUDO} }chown -R ${ccs_user}:${ccs_group:-${ccs_user}} /private/var/${ccs_user}"
-  execCmd "${_SUDO:+${_SUDO} }chmod 0750 /private/var/${ccs_user}"
-  for G in certusers _postgres ; do
-    if ! dscl . -read /Groups/${G} GroupMembership | grep ${ccs_user}  > /dev/null 2>&1 ; then
-      execCmd "${_SUDO:+${_SUDO} }dscl . -append /Groups/${G} GroupMembership ${ccs_user}"
-    fi
-  done
 }
 ################################################################################
 # Build
