@@ -6,7 +6,7 @@ RUN apt install -y git
 
 # Setup an app user so the container doesn't run as the root user
 RUN useradd calendarserver
-RUN chown . calendarserver
+RUN chown -R calendarserver .
 USER calendarserver
 
 # Install the application dependencies
