@@ -126,9 +126,10 @@ execCmdExitOnErrorIgnoreDryRun "pre_build"
 # As user ${ccs_user} build the software...
 execCmdExitOnErrorIgnoreDryRun "$(${VJPD_FUNCTIONS_READLINK} -f ${0}) \
   ${quiet} ${dryRun} ${debug} ${vbose} \
-  --exec 'build_server configure_server create_self_signed_certs' \
+  --exec 'build_server configure_server' \
 "
-execCmdExitOnErrorIgnoreDryRun "upgrade_database"
-execCmdExitOnErrorIgnoreDryRun "enable_in_launchctl"
+#  --exec 'build_server configure_server create_self_signed_certs' \
+#execCmdExitOnErrorIgnoreDryRun "upgrade_database"
+#execCmdExitOnErrorIgnoreDryRun "enable_in_launchctl"
 
 exit
