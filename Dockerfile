@@ -35,7 +35,9 @@ VOLUME /opt/Calendar\ and\ Contacts
 
 # Install the application dependencies
 COPY bin ./bin/
-RUN bin/linux.Apple_ccs_to_vjpd_ccs_migration
+RUN bin/linux.Apple_ccs_to_vjpd_ccs_migration pre_build
+RUN bin/linux.Apple_ccs_to_vjpd_ccs_migration build_server
+#RUN bin/linux.Apple_ccs_to_vjpd_ccs_migration configure_server
 
 #USER calendarserver
 
