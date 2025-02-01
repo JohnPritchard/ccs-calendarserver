@@ -38,7 +38,7 @@ Usage: ${execName} [-h|Dvnq] [--DT <yyyy-mm-ddThh:mm:ss>]
 ## Definition of variable who need default values
 execName="`basename ${0}`"
 quietLevel=0
-ccs_ver="9.4.3-dev"
+ccs_ver="9.4.4-dev"
 ccs_user=calendarserver
 ccs_group=calendarserver
 _hostname_s=$(/bin/hostname -s)
@@ -94,7 +94,7 @@ while [ ! -z "${1}" ]; do
   esac
 done
 
-_cen=$(greadlink -f "${0}")
+_cen=$(${VJPD_FUNCTIONS_READLINK} -f "${0}")
 source $(dirname "${_cen}")/macOSX.calendar_utils.sh
 ################################################################################
 ## Main loop starts...
