@@ -78,7 +78,7 @@ parse_options () {
   shift $((${OPTIND} - 1));
 
   if [ $# -le 0 ]; then
-    usage "No desination provided.";
+    usage "No destination provided.";
   fi;
   destination="$1"; shift;
 
@@ -111,8 +111,9 @@ main () {
       py_bindir="${py_virtualenv}/bin";
     py_ve_tools="${dev_home}/ve_tools";
 # This results in permissions errors on macOS with SIP
-#  virtualenv_opts="--always-copy";
-  virtualenv_opts="";
+# but works ok if we use python2.7 from MacPorts...
+  virtualenv_opts="--always-copy";
+  #virtualenv_opts="";
 
 
   c_dependencies;
