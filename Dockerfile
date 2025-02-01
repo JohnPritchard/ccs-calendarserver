@@ -11,6 +11,8 @@ RUN apt install -y \
     g++ \
     git \
     libssl-dev \
+    libsasl2-dev \
+    libldap2-dev \
     libtool \
     pkg-config \
     rsync \
