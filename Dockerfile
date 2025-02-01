@@ -2,7 +2,10 @@ FROM python:2.7
 WORKDIR /opt/ccs-calendarserver
 
 # prepare the system...
-RUN apt install -y git
+RUN apt install -y \
+    git \
+    coreutils \
+
 
 # Setup an app user so the container doesn't run as the root user
 RUN useradd calendarserver
