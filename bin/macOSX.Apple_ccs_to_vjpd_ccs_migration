@@ -124,7 +124,7 @@ fi
 execCmdExitOnErrorIgnoreDryRun "pre_build"
 
 # As user ${ccs_user} build the software...
-execCmdExitOnErrorIgnoreDryRun "sudo -iu ${ccs_user} $(${VJPD_FUNCTIONS_READLINK} -f ${0}) \
+execCmdExitOnErrorIgnoreDryRun "$(${VJPD_FUNCTIONS_READLINK} -f ${0}) \
   ${quiet} ${dryRun} ${debug} ${vbose} \
   --exec 'build_server configure_server create_self_signed_certs' \
 "

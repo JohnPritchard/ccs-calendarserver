@@ -1,19 +1,21 @@
 ## "@(#) $Id: macOSX.Apple_ccs_to_vjpd_ccs_migration 3991 2022-03-14 10:07:32Z vdoublie $"
 
+_SUDO=$(which sudo 2>/dev/null)
+_SUDO_ccs_user=${_SUDO:+${_SUDO} -u ${ccs_user}}
 ################################################################################
 # Before building...
 pre_build() {
   ## Stop any running instance of the Calendar & Contacts
   if which serveradmin > /dev/null 2>&1 ; then
-    execCmd "sudo serveradmin stop calendar"
-    execCmd "sudo serveradmin stop addressbook"
+    execCmd "${_SUDO:+${_SUDO} }serveradmin stop calendar"
+    execCmd "${_SUDO:+${_SUDO} }serveradmin stop addressbook"
   fi
   if [ -e /Library/LaunchDaemons/org.calendarserver.plist ]; then
-    execCmd "sudo launchctl unload -w /Library/LaunchDaemons/org.calendarserver.plist"
-    execCmd "sudo rm /Library/LaunchDaemons/org.calendarserver.plist"
+    execCmd "${_SUDO:+${_SUDO} }launchctl unload -w /Library/LaunchDaemons/org.calendarserver.plist"
+    execCmd "${_SUDO:+${_SUDO} }rm /Library/LaunchDaemons/org.calendarserver.plist"
   fi
   if [ -h /Library/LaunchDaemons/org.calendarserver.plist ]; then
-    execCmd "sudo rm /Library/LaunchDaemons/org.calendarserver.plist"
+    execCmd "${_SUDO:+${_SUDO} }rm /Library/LaunchDaemons/org.calendarserver.plist"
   fi
 
   # Create an admin ${ccs_user:-calendarserver} user and group if necessary
@@ -27,37 +29,37 @@ pre_build() {
       NEXTGID=$(dscl . -list /Groups UniqueID | sort -n -k2 | awk 'BEGIN{i=200}{if($2==i)i=$2+1}END{print i}')
       # First create the group, if needed...
       if ! dscl . -list /Groups | grep ^${ccs_group:-${ccs_user}}$ > /dev/null 2>&1 ; then
-        execCmd "sudo dscl . -create /Groups/${ccs_group:-${ccs_user}} \
+        execCmd "${_SUDO:+${_SUDO} }dscl . -create /Groups/${ccs_group:-${ccs_user}} \
           PrimaryGroupID ${NEXTGID} \
         "
-        execCmd "sudo dscl . -create /Groups/${ccs_group:-${ccs_user}} \
+        execCmd "${_SUDO:+${_SUDO} }dscl . -create /Groups/${ccs_group:-${ccs_user}} \
           RecordName ${ccs_group:-${ccs_user}} \
         "
       fi
       # Then the user...
-      execCmd "sudo dscl . -create /Users/${ccs_user} \
+      execCmd "${_SUDO:+${_SUDO} }dscl . -create /Users/${ccs_user} \
         RealName ${ccs_user} \
       "
-      execCmd "sudo dscl . -create /Users/${ccs_user} \
+      execCmd "${_SUDO:+${_SUDO} }dscl . -create /Users/${ccs_user} \
         UniqueID ${NEXTUID} \
       "
-      execCmd "sudo dscl . -create /Users/${ccs_user} \
+      execCmd "${_SUDO:+${_SUDO} }dscl . -create /Users/${ccs_user} \
         PrimaryGroupID ${ccs_group:-${ccs_user}} \
       "
-      execCmd "sudo dscl . -create /Users/${ccs_user} \
+      execCmd "${_SUDO:+${_SUDO} }dscl . -create /Users/${ccs_user} \
         NFSHomeDirectory /private/var/${ccs_user} \
       "
-      execCmd "sudo dscl . -create /Users/${ccs_user} \
+      execCmd "${_SUDO:+${_SUDO} }dscl . -create /Users/${ccs_user} \
         UserShell /bin/bash \
       "
     fi
   fi
-  execCmd "sudo mkdir -p /private/var/${ccs_user}"
-  execCmd "sudo chown -R ${ccs_user}:${ccs_group:-${ccs_user}} /private/var/${ccs_user}"
-  execCmd "sudo chmod 0750 /private/var/${ccs_user}"
+  execCmd "${_SUDO:+${_SUDO} }mkdir -p /private/var/${ccs_user}"
+  execCmd "${_SUDO:+${_SUDO} }chown -R ${ccs_user}:${ccs_group:-${ccs_user}} /private/var/${ccs_user}"
+  execCmd "${_SUDO:+${_SUDO} }chmod 0750 /private/var/${ccs_user}"
   for G in certusers _postgres ; do
     if ! dscl . -read /Groups/${G} GroupMembership | grep ${ccs_user}  > /dev/null 2>&1 ; then
-      execCmd "sudo dscl . -append /Groups/${G} GroupMembership ${ccs_user}"
+      execCmd "${_SUDO:+${_SUDO} }dscl . -append /Groups/${G} GroupMembership ${ccs_user}"
     fi
   done
 }
@@ -175,8 +177,8 @@ upgrade_database() {
   # If it exists, extract a tgz Archive version of the database...
   if [ ! -z "${ccs_tarfile}" ]; then
     if [ -e "${ccs_tarfile}" ]; then
-      [ -d ${CCS_ROOT}/Calendar\ and\ Contacts ] && execCmd "sudo rm -fr ${CCS_ROOT}/Calendar\ and\ Contacts"
-      execCmd "sudo tar -C ${CCS_ROOT} -zxf '${ccs_tarfile}'"
+      [ -d ${CCS_ROOT}/Calendar\ and\ Contacts ] && execCmd "${_SUDO:+${_SUDO} }rm -fr ${CCS_ROOT}/Calendar\ and\ Contacts"
+      execCmd "${_SUDO:+${_SUDO} }tar -C ${CCS_ROOT} -zxf '${ccs_tarfile}'"
     else
       errorLog "Could not find '${ccs_tarfile}'"
       exit 1
@@ -184,10 +186,10 @@ upgrade_database() {
   fi
   # Set ownerships to ${ccs_user} user...
   if [ -d ${CCS_ROOT}/Calendar\ and\ Contacts ]; then
-    execCmd "sudo chown -R ${ccs_user}:${ccs_group:-${ccs_user}} ${CCS_ROOT}/Calendar\ and\ Contacts"
+    execCmd "${_SUDO:+${_SUDO} }chown -R ${ccs_user}:${ccs_group:-${ccs_user}} ${CCS_ROOT}/Calendar\ and\ Contacts"
   fi
   if [ -d /var/run/caldavd ]; then
-    execCmd "sudo find /var/run/caldavd -user _calendar -exec chown ${ccs_user}:${ccs_group:-${ccs_user}} {} \\;"
+    execCmd "${_SUDO:+${_SUDO} }find /var/run/caldavd -user _calendar -exec chown ${ccs_user}:${ccs_group:-${ccs_user}} {} \\;"
     #find /var/run/caldavd -user ${ccs_user} -exec chown _calendar:_calendar {} \;
   fi
 
@@ -234,20 +236,20 @@ upgrade_database() {
       # Check the version of the current cluster...
       # Dump the 9.4 DB using the macos Server postgres-9.4, just in case...
       if [ ! -d "${CLUSTER}-${from_PG_VERSION}" ] ; then
-        execCmd "${ccs_user:+sudo -u ${ccs_user}} \
+        execCmd "${ccs_user:+${_SUDO_ccs_user}} \
           \"${BIN_DIR_from}/pg_ctl\" \
             -U caldav \
             -l caldav.dump-${from_ver}.${DT}.log \
             -D \"${CLUSTER}\" \
             -w start \
             "
-        execCmd "${ccs_user:+sudo -u ${ccs_user}} \
+        execCmd "${ccs_user:+${_SUDO_ccs_user}} \
           \"${BIN_DIR_from}/pg_dump\" \
             -U caldav \
             -b caldav \
             -f \"${dn_CLUSTER}/caldav.dump-${from_ver}.${DT}.out\" \
             "
-        execCmd "${ccs_user:+sudo -u ${ccs_user}} \
+        execCmd "${ccs_user:+${_SUDO_ccs_user}} \
           \"${BIN_DIR_from}/pg_ctl\" \
             -U caldav \
             -l caldav.dump-${from_ver}.${DT}.log \
@@ -267,15 +269,15 @@ upgrade_database() {
         [ -d postres_upgrade ] && execCmd "rm -fr postres_upgrade"
         execCmd "mkdir -p postres_upgrade"
         execCmd "cd postres_upgrade"
-        execCmd "${ccs_user:+sudo -u ${ccs_user}} \
+        execCmd "${ccs_user:+${_SUDO_ccs_user}} \
           \"${BIN_DIR_to}/initdb\" \
             -D \"${CLUSTER}\" \
             -U caldav \
             -E UTF8 \
             2>&1 | tee -a caldav_upgrade_${from_ver}--${to_ver}.log \
             "
-        [ ! -z "${ccs_user}" ] && sudo chown -R ${ccs_user}:${ccs_group:-${ccs_user}} "${CCS_ROOT}/Calendar and Contacts"
-        execCmd "${ccs_user:+sudo -u ${ccs_user}} \
+        [ ! -z "${ccs_user}" ] && ${_SUDO:+${_SUDO} }chown -R ${ccs_user}:${ccs_group:-${ccs_user}} "${CCS_ROOT}/Calendar and Contacts"
+        execCmd "${ccs_user:+${_SUDO_ccs_user}} \
           \"${BIN_DIR_to}/pg_upgrade\" -v \
             -U caldav \
             -b \"${BIN_DIR_from}\" \
@@ -284,7 +286,7 @@ upgrade_database() {
             -D \"${CLUSTER}\" \
             2>&1 | tee -a caldav_upgrade_${from_ver}--${to_ver}.log \
             "
-        execCmd "${ccs_user:+sudo -u ${ccs_user}} \
+        execCmd "${ccs_user:+${_SUDO_ccs_user}} \
           \"${BIN_DIR_to}/pg_ctl\" \
             -D \"${CLUSTER}\" \
             -l caldav_upgrade_${from_ver}--${to_ver}.log \
@@ -295,7 +297,7 @@ upgrade_database() {
           exit 1
         fi
         execCmd "./analyze_new_cluster.sh | tee -a caldav_upgrade_${from_ver}--${to_ver}.log"
-        execCmd "${ccs_user:+sudo -u ${ccs_user}} \
+        execCmd "${ccs_user:+${_SUDO_ccs_user}} \
           \"${BIN_DIR_to}/pg_ctl\" \
             -D \"${CLUSTER}\" \
             -l caldav_upgrade_${from_ver}--${to_ver}.log \
@@ -321,13 +323,13 @@ enable_in_launchctl() {
   if [ ! -e /Library/LaunchDaemons/org.calendarserver.plist ] || \
     ! diff org.calendarserver.plist /Library/LaunchDaemons/org.calendarserver.plist >/dev/null 2>&1 ; \
     then
-      execCmd "sudo ln -fsv $(pwd)/org.calendarserver.plist /Library/LaunchDaemons/"
+      execCmd "${_SUDO:+${_SUDO} }ln -fsv $(pwd)/org.calendarserver.plist /Library/LaunchDaemons/"
   fi
   printf "\
 Enable with:
-sudo launchctl load -w /Library/LaunchDaemons/org.calendarserver.plist 
+${_SUDO:+${_SUDO} }launchctl load -w /Library/LaunchDaemons/org.calendarserver.plist 
 Disable with...
-sudo launchctl unload -w /Library/LaunchDaemons/org.calendarserver.plist
+${_SUDO:+${_SUDO} }launchctl unload -w /Library/LaunchDaemons/org.calendarserver.plist
 "
 }
 ################################################################################
