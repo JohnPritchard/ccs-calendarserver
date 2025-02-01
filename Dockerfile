@@ -35,13 +35,12 @@ VOLUME /opt/Calendar\ and\ Contacts
 
 # Install the application dependencies
 COPY bin ./bin/
-#RUN bin/linux.Apple_ccs_to_vjpd_ccs_migration
+RUN bin/linux.Apple_ccs_to_vjpd_ccs_migration
 
-#USER calendarserver
+USER calendarserver
 
-# Copy in the source code
-#COPY src ./src
-EXPOSE 5000
+# expose ports...
+#EXPOSE 5000
 
 #CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
 #CMD ["/usr/bin/bash"]
