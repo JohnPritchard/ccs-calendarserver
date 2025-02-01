@@ -1,0 +1,26 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    //
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Calendar",
+            "type": "python",
+            "request": "launch",
+            "python": "/private/var/calendarserver/CalendarServer/bin/python",
+            "program": "/private/var/calendarserver/CalendarServer/virtualenv/bin/twistd",
+            "console": "integratedTerminal",
+            "sudo": true,
+            "args": [
+                "--reactor=kqueue",
+                "-n", "caldav",
+                "-f", "/private/var/calendarserver/CalendarServer/conf/calendarserver_debug.plist",
+                "-o", "Twisted/reactor=kqueue",
+            ],
+            "env": {"PATH": "/private/var/calendarserver/CalendarServer/bin:/private/var/calendarserver/CalendarServer/virtualenv/bin:/usr/bin:/usr/sbin:/bin:/sbin"},
+            "justMyCode": false,
+        }
+    ]
+}
