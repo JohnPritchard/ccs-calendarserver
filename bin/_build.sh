@@ -17,7 +17,6 @@
 
 . "${wd}/bin/_py.sh";
 
-
 # Provide a default value: if the variable named by the first argument is
 # empty, set it to the default in the second argument.
 conditional_set () {
@@ -611,11 +610,11 @@ c_dependencies () {
       "https://github.com/libevent/libevent/releases/download/release-${v}/${p}.tar.gz" \
       ${configure_openssl};
 
-    local v="1.6.6";
+    local v="1.6.23";
     local n="memcached";
     local p="${n}-${v}";
 
-    c_dependency -s "d8895b12dc9fc82b389f1713e2c09cc6ca3d03e4" \
+    c_dependency -s "d5490856170453b15a782ad55ffdea188c2eade0" \
       "memcached" "${p}" \
       "http://www.memcached.org/files/${p}.tar.gz" \
       "--disable-docs";
@@ -697,11 +696,15 @@ py_dependencies () {
 
   if [ ! -d "${py_virtualenv}" ]; then
     bootstrap_virtualenv;
+    export
+    pwd
     "${bootstrap_python}" -m virtualenv  \
       --system-site-packages             \
-      --no-setuptools                    \
       ${virtualenv_opts}                 \
       "${py_virtualenv}";
+    #  --no-setuptools                    \
+    #codesign -s - -f "${py_virtualenv}"/bin/python
+    #unset PYTHONUSERBASE
     if [ "${use_openssl}" = "false" ]; then
       # Interacting with keychain requires either a valid code signature, or no
       # code signature. An *invalid* code signature won't work.
@@ -731,7 +734,10 @@ EOF
 
   ruler "Preparing Python requirements";
   echo "";
-  "${pip_install}" --requirement="${requirements}";
+  export
+  pwd
+  "${pip_install}" --prefix="${py_virtualenv}" --requirement="${requirements}";
+  #"${pip_install}" --requirement="${requirements}";
 
   for extra in $("${bootstrap_python}" -c 'import setup; print "\n".join(setup.extras_requirements.keys())'); do
     ruler "Preparing Python requirements for optional feature: ${extra}";
@@ -748,7 +754,8 @@ EOF
 
   ruler "Preparing Python requirements for patching";
   echo "";
-  "${pip_install}" --ignore-installed --no-deps --requirement="${wd}/requirements-ignore-installed.txt";
+  "${pip_install}" --prefix="${py_virtualenv}" --ignore-installed --no-deps --requirement="${wd}/requirements-ignore-installed.txt";
+  #"${pip_install}" --ignore-installed --no-deps --requirement="${wd}/requirements-ignore-installed.txt";
 
   ruler "Patching Python requirements";
   echo "";
@@ -782,10 +789,11 @@ bootstrap_virtualenv () {
   # If we're already in a venv, don't use --user flag for pip install
   if [ -z ${VIRTUAL_ENV:-} ]; then NESTED="--user" ; else NESTED=""; fi
 
+#      git+https://github.com/JohnPritchard/virtualenv.git@16.7.12.1 \
   for pkg in              \
       setuptools==44.1.1  \
-      pip==20.3.3         \
-      virtualenv==16.7.10 \
+      pip==20.3.4         \
+      virtualenv==20.7.2  \
   ; do
       ruler "Installing ${pkg}";
       "${bootstrap_python}" -m pip install -I ${NESTED} "${pkg}";
