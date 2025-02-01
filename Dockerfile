@@ -4,6 +4,9 @@ WORKDIR /opt/ccs-calendarserver
 # prepare the system...
 RUN apt update
 RUN apt install -y \
+    automake \
+    autotools \
+    g++ \
     bash \
     coreutils \
     git \
