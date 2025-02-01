@@ -586,15 +586,17 @@ c_dependencies () {
     fi;
   else
     local v="2.1.26";
+    local v="2.1.28";
     local n="cyrus-sasl";
     local p="${n}-${v}";
 
     # 2.1.26 a7f4e5e559a0e37b3ffc438c9456e425 ftp://ftp.cyrusimap.org/cyrus-sasl/${p}.tar.gz a7f4e5e559a0e37b3ffc438c9456e425
     # 2.1.26 fd0b4f6401803e1bb670411105b98a09 https://github.com/cyrusimap/cyrus-sasl/archive/refs/tags/cyrus-sasl-2.1.26.tar.gz
     # 2.1.26 a7f4e5e559a0e37b3ffc438c9456e425 https://github.com/cyrusimap/cyrus-sasl/releases/download/cyrus-sasl-2.1.26/cyrus-sasl-2.1.26.tar.gz
-    c_dependency -m "a7f4e5e559a0e37b3ffc438c9456e425" \
+    # 2.1.28 6f228a692516f5318a64505b46966cfa https://github.com/cyrusimap/cyrus-sasl/releases/download/cyrus-sasl-2.1.28/cyrus-sasl-2.1.28.tar.gz
+    c_dependency -m "6f228a692516f5318a64505b46966cfa" \
       "CyrusSASL" "${p}" \
-      "https://github.com/cyrusimap/cyrus-sasl/releases/download/cyrus-sasl-2.1.26/${p}.tar.gz" \
+      "https://github.com/cyrusimap/cyrus-sasl/releases/download/${p}/${p}.tar.gz" \
       --disable-macos-framework;
   fi;
 
