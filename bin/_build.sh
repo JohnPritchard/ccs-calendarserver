@@ -522,13 +522,15 @@ c_dependencies () {
     if [ "${ssl_version}" -ge "${min_ssl_version}" ]; then
       using_system "OpenSSL";
     else
-      local v="1.1.1i";
+      local v="1.1.1w";
       local n="openssl";
       local p="${n}-${v}";
 
       # use 'config' instead of 'configure'; 'make' instead of 'jmake'.
       # also pass 'shared' to config to build shared libs.
-      c_dependency -c "config" -s "eb684ba4ed31fe2c48062aead75233ecd36882a6" \
+      # 1.1.1i sha1 eb684ba4ed31fe2c48062aead75233ecd36882a6
+      # 1.1.1w sha1 76fbf3ca4370e12894a408ef75718f32cdab9671
+      c_dependency -c "config" -s "76fbf3ca4370e12894a408ef75718f32cdab9671" \
         -p "make depend" -b "make" \
         "openssl" "${p}" \
         "http://www.openssl.org/source/${p}.tar.gz" "shared";
