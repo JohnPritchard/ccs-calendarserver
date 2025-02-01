@@ -118,7 +118,7 @@ configure_server() {
   execCmd "ln -fsv ${ccs_ver}/CalendarServer CalendarServer"
   execCmd "cd "${_pwd}"/${ccs_ver}/CalendarServer"
   execCmd "mkdir conf run logs{,_debug} certs"
-  execCmd "/opt/local/bin/gsed \
+  execCmd "${VJPD_FUNCTIONS_SED} \
     -e \"s@/Library/Server/Calendar and Contacts@${CCS_ROOT}/Calendar and Contacts@\" \
     -e 's@<string>/Library/Server/Preferences/Calendar.plist</string>@<!-- & -->@' \
     ${_pwd}/${ccs_ver}/ccs-calendarserver/contrib/conf/calendarserver.plist \
@@ -131,7 +131,7 @@ configure_server() {
   # Setup for running in debug mode in VS-Code...
   execCmd "ln -s /dev/stdout logs_debug/access.log"
   execCmd "ln -s /dev/stderr logs_debug/error.log"
-  execCmd "/opt/local/bin/gsed \
+  execCmd "${VJPD_FUNCTIONS_SED} \
     -e 's%CalendarServer/logs%&_debug%' \
     -e '/<key>RotateAccessLog<\/key>/!b;n;c    <false/>' \
     -e 's%<string>warn</string>%<string>info</string>%' \
@@ -154,7 +154,7 @@ create_self_signed_certs() {
   ## see https://7402.org/blog/2019/new-self-signed-ssl-cert-ios-13.html
   ## Modified for using the openssl built by ccs-calendarserver...
   execCmd "cp ../roots/openssl/ssl/openssl.cnf ${cert_dt}/${_hostname_s}.cnf"
-  execCmd "/opt/local/bin/gsed -i\
+  execCmd "${VJPD_FUNCTIONS_SED} -i\
     -e \"s/^\[\s\s*v3_ca\s\s*\]\s*$/&\nsubjectAltName = DNS:${_hostname_s}.vjpd.net\nextendedKeyUsage = serverAuth\n/\" \
     -e 's/^# \(copy_extensions = copy\)/\1/' \
     ${cert_dt}/${_hostname_s}.cnf \
