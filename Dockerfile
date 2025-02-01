@@ -2,7 +2,7 @@ FROM python:2.7
 WORKDIR /opt/ccs-calendarserver
 
 # Install the application dependencies
-COPY requirements.txt ./
+COPY requirements*.txt ./
 RUN python2.17 -m pip install --no-cache-dir -r requirements.txt
 
 # Copy in the source code
