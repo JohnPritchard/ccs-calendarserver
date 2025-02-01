@@ -5,8 +5,8 @@ WORKDIR /opt/ccs-calendarserver
 RUN apt install -y \
     bash \
     coreutils \
-    git \
-    rsync
+    git
+#    rsync
 
 
 # Setup an app user so the container doesn't run as the root user
