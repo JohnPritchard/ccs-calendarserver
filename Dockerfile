@@ -4,6 +4,7 @@ WORKDIR /opt/ccs-calendarserver
 # prepare the system...
 RUN apt install -y \
     git \
+    bash \
     coreutils
 
 
