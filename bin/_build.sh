@@ -737,6 +737,7 @@ EOF
   export
   pwd
   "${pip_install}" --prefix="${py_virtualenv}" --requirement="${requirements}";
+  #"${pip_install}" --requirement="${requirements}";
 
   for extra in $("${bootstrap_python}" -c 'import setup; print "\n".join(setup.extras_requirements.keys())'); do
     ruler "Preparing Python requirements for optional feature: ${extra}";
@@ -754,6 +755,7 @@ EOF
   ruler "Preparing Python requirements for patching";
   echo "";
   "${pip_install}" --prefix="${py_virtualenv}" --ignore-installed --no-deps --requirement="${wd}/requirements-ignore-installed.txt";
+  #"${pip_install}" --ignore-installed --no-deps --requirement="${wd}/requirements-ignore-installed.txt";
 
   ruler "Patching Python requirements";
   echo "";
