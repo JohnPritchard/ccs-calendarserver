@@ -67,8 +67,8 @@ pre_build() {
 # Build
 build_server() {
   _pwd=$(pwd)
-  ! grep PATH.\*${HOME}}/Library/Python/2.7/bin .profile >/dev/null 2>&1 && \
-    execCmd "echo 'export PATH=${HOME}/Library/Python/2.7/bin:$(getconf PATH)' > .profile"
+  ! grep PATH.\*${_pwd}}/Library/Python/2.7/bin .profile >/dev/null 2>&1 && \
+    execCmd "echo 'export PATH=${_pwd}/Library/Python/2.7/bin:$(getconf PATH)' > .profile"
   . .profile
 
   execCmd "mkdir -pv git"
@@ -92,7 +92,7 @@ build_server() {
   execCmd "rsync -ax git/ccs-calendarserver-${ccs_ver}/ ${ccs_ver}/ccs-calendarserver/"
   cd ${ccs_ver}
   execCmd "mkdir ccs-calendarserver/.develop"
-  execCmd "ln -s ${HOME}/ccs-pkgs ccs-calendarserver/.develop/pkg"
+  execCmd "ln -s ${_pwd}/ccs-pkgs ccs-calendarserver/.develop/pkg"
   execCmd "chmod -R g+rwX ccs-calendarserver"
   # Install pip
   execCmd "mkdir ccs-calendarserver/.develop/ve_tools"
@@ -104,7 +104,7 @@ build_server() {
     PATH=$(getconf PATH) \
     ${PYTHON:+PYTHON=${PYTHON}} \
     USE_OPENSSL=1 \
-    bash -x ./bin/package ${HOME}/${ccs_ver}/CalendarServer \
+    bash -x ./bin/package ${_pwd}/${ccs_ver}/CalendarServer \
     "
 }
 ################################################################################
@@ -118,11 +118,11 @@ configure_server() {
   execCmd "/opt/local/bin/gsed \
     -e \"s@/Library/Server/Calendar and Contacts@${CCS_ROOT}/Calendar and Contacts@\" \
     -e 's@<string>/Library/Server/Preferences/Calendar.plist</string>@<!-- & -->@' \
-    ${HOME}/${ccs_ver}/ccs-calendarserver/contrib/conf/calendarserver.plist \
-    > ${HOME}/${ccs_ver}/CalendarServer/conf/calendarserver.plist \
+    ${_pwd}/${ccs_ver}/ccs-calendarserver/contrib/conf/calendarserver.plist \
+    > ${_pwd}/${ccs_ver}/CalendarServer/conf/calendarserver.plist \
     "
-  execCmd "cp ${HOME}/${ccs_ver}/ccs-calendarserver/contrib/conf/org.calendarserver.plist \
-    ${HOME}/${ccs_ver}/CalendarServer/conf \
+  execCmd "cp ${_pwd}/${ccs_ver}/ccs-calendarserver/contrib/conf/org.calendarserver.plist \
+    ${_pwd}/${ccs_ver}/CalendarServer/conf \
     "
 
   # Setup for running in debug mode in VS-Code...
@@ -260,7 +260,7 @@ upgrade_database() {
             "
       fi
       # Upgrade to calendarserver-postgresql version
-      #BIN_DIR_to=${HOME}/CalendarServer/roots/PostgreSQL/bin
+      #BIN_DIR_to=${_pwd}/CalendarServer/roots/PostgreSQL/bin
       # Upgrade to postgresql 9.5
       #BIN_DIR_to="/opt/local/lib/postgresql95/bin"
       # Upgrade to postgresql 13
