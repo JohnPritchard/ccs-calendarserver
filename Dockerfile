@@ -23,7 +23,15 @@ RUN ln -s /usr/local/bin/python2.7 /usr/bin/python2.7
 RUN ln -s /usr/local/bin/python2.7 /usr/bin/python
 
 # Setup an app user so the container doesn't run as the root user
-RUN useradd calendarserver
+RUN groupadd \
+    --gid 129 \
+    calendarserver
+RUN useradd \
+    --uid 116 \
+    --gid 129 \
+    calendarserver
+
+VOLUME /opt/Calendar\ and\ Contacts
 
 # Install the application dependencies
 COPY bin ./bin/
