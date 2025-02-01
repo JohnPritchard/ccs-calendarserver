@@ -10,6 +10,7 @@ RUN apt install -y \
     coreutils \
     g++ \
     git \
+    libssl-dev \
     libtool \
     pkg-config \
     rsync \
