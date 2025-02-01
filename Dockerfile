@@ -2,12 +2,12 @@ FROM ubuntu:22.04
 WORKDIR /opt/ccs-calendarserver
 
 # prepare the system...
-RUN apt install -y \
-    python2.7 \
-    bash \
-    coreutils \
-    git \
-    rsync
+#RUN apt install -y \
+#    python2.7 \
+#    bash \
+#    coreutils \
+#    git \
+#    rsync
 
 
 # Setup an app user so the container doesn't run as the root user
