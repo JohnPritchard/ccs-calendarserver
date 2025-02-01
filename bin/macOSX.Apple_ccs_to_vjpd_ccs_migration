@@ -1,0 +1,134 @@
+#!/bin/sh
+
+## "@(#) $Id: macOSX.Apple_ccs_to_vjpd_ccs_migration 4510 2024-01-28 15:43:43Z smpd $"
+
+################################################################################
+## Definition of functions
+usage() {
+  printf "\
+Usage: ${execName} [-h|Dvnq] [--DT <yyyy-mm-ddThh:mm:ss>]
+
+  -h|--help: help
+  -D|--debug: debug
+  -n|--dryRun: dry-run
+  -q|--quiet: quiet
+     -q Only Warnings and Errors are written out (to stderr)
+     -q -q increases quietness, only Errors are written out (to stderr)
+     -q -q -q increases quietness, NO output to stdout or stderr
+  -v|--verbose: verbose
+
+  --DT <yyyy-mm-ddThh:mm:ss>
+  -H|--hostname  <hostname>: default '/bin/hostname -s'
+
+  --ccs_user <username>: deafult = calendarserver, untested with other values
+  --ccs_group <groupname>: deafult = calendarserver, untested with other values
+  --ccs_tarfile <ccs_tarfile.tgz>: Normally a tgz archive of 'Calendar and Contacts', normally from
+      /Library/Server of the macOS server, will be extracted into '/opt/Calendar and Contacts',
+      unless a 'Calendar and Contacts' directory exists in th ecurrent working directory, in
+      which case that one will be DELETED and replaced by the contents of ccs_tarfile
+
+  --exec <phase>:  one or more (quoted list or multiple instances) of:
+      [pre_build, build_server, configure_server, create_self_signed_certs, upgrade_database, enable_in_launchctl]
+      build_server, configure_server, create_self_signed_certs are normally performed as user 
+"
+  exit ${exstat:-0}
+}
+
+################################################################################
+## Definition of variable who need default values
+execName="`basename ${0}`"
+quietLevel=0
+ccs_ver="9.4.3-dev"
+ccs_user=calendarserver
+ccs_group=calendarserver
+_hostname_s=$(/bin/hostname -s)
+if [ -d "Calendar and Contacts" ]; then
+  CCS_ROOT="$(pwd)"
+else
+  CCS_ROOT="/opt"
+fi
+CLUSTER="${CCS_ROOT}/Calendar and Contacts/Data/Database.xpg/cluster.pg"
+dn_CLUSTER=$(dirname "${CLUSTER}")
+
+################################################################################
+## Generic utility functions
+if [ -d /opt/local/bin ]; then
+  export PATH=/opt/local/bin:${PATH}
+fi
+if [ -z "${VJPD_FUNCTIONS_READLINK}" ]; then
+  VJPD_FUNCTIONS_READLINK="readlink"
+  which greadlink > /dev/null 2>&1 && VJPD_FUNCTIONS_READLINK="greadlink"
+  if ! ${VJPD_FUNCTIONS_READLINK} -f ${0} >/dev/null 2>&1 ; then
+    echo "${VJPD_FUNCTIONS_READLINK} does not support -f command line option"
+    exit 1
+  fi
+fi
+[ -z "${VJPD_FUNCTIONS}" ] && VJPD_FUNCTIONS="$(ls $(dirname $(${VJPD_FUNCTIONS_READLINK} -f ${0}))/vjpd.functions.sh 2>/dev/null)"
+if [ -e ${VJPD_FUNCTIONS:-/opt/vjpd/bin/vjpd.functions.sh} ]; then
+  . ${VJPD_FUNCTIONS:-/opt/vjpd/bin/vjpd.functions.sh}
+else
+  echo "${execName}::Error:: ${VJPD_FUNCTIONS:-/opt/vjpd/bin/vjpd.functions.sh} does NOT exist"
+  exit 1
+fi
+# ------------------------------------------------------------------------------
+
+################################################################################
+## Command line options
+while [ ! -z "${1}" ]; do
+
+  case $1 in
+    -h|--help)     usage ; shift;;
+    -D|--debug)    debug="-D"; quiet=""; vbose="-v";  quietLevel=0 ; shift;;
+    -n|--dryRun)   dryRun="-n"; shift;;
+    -q|--quiet)    quiet="${quiet} -q"; vbose=""; debug=""; (( quietLevel++ )) ; shift;;
+    -v|--verbose)  vbose="-v"; quiet="";  quietLevel=0 ; shift;;
+
+    --DT)          DT="${2}"; shift; shift;;
+    -H|--hostname) _hostname_s="${2}"; shift; shift;;
+    -V|--version)  ccs_ver="${2}"; shift; shift;;
+    --ccs_user)    ccs_user="${2}"; shift; shift;;
+    --ccs_group)   ccs_group="${2}"; shift; shift;;
+    --ccs_tarfile) ccs_tarfile="${2}"; shift; shift;;
+    --exec)        exec_functions="${exec_functions:+${exec_functions} }${2}"; shift; shift;;
+    *)             exstat=1; usage; shift;;
+  esac
+done
+
+_cen=$(greadlink -f "${0}")
+source $(dirname "${_cen}")/macOSX.calendar_utils.sh
+################################################################################
+## Main loop starts...
+
+exstat=0
+
+# Call other template.bash based scripts with command line options:
+##  ${quiet} ${dryRun} ${debug} ${vbose}
+# or
+##  ${quiet} ${dryRun} ${debug:+-d} ${vbose}
+# for older scripts with "-d" for debug rather than -D
+
+##########################################################################################################
+# If called with exec_functions, execute those then exit...
+if [ ! -z "${exec_functions}" ]; then
+  for exec_function in $exec_functions ; do
+    execCmdIgnoreDryRun "${exec_function}"
+    exstat=$?
+    [[ $exstat -ne 0 ]] && exit $exstat
+  done
+  exit 0
+fi
+##########################################################################################################
+## Otherwise run the script!
+
+##########################################################################################################
+execCmdExitOnErrorIgnoreDryRun "pre_build"
+
+# As user ${ccs_user} build the software...
+execCmdExitOnErrorIgnoreDryRun "sudo -iu ${ccs_user} $(${VJPD_FUNCTIONS_READLINK} -f ${0}) \
+  ${quiet} ${dryRun} ${debug} ${vbose} \
+  --exec 'build_server configure_server create_self_signed_certs' \
+"
+execCmdExitOnErrorIgnoreDryRun "upgrade_database"
+execCmdExitOnErrorIgnoreDryRun "enable_in_launchctl"
+
+exit
