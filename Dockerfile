@@ -12,7 +12,7 @@ RUN useradd calendarserver
 
 # Install the application dependencies
 COPY bin ./bin/
-RUN bin/macOSX.Apple_ccs_to_vjpd_ccs_migration
+RUN bin/linux.Apple_ccs_to_vjpd_ccs_migration
 
 USER calendarserver
 
