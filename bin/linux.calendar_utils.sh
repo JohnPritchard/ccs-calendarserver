@@ -117,30 +117,27 @@ configure_server() {
   _pwd=$(pwd)
   execCmd "ln -fsv ${ccs_ver}/CalendarServer CalendarServer"
   execCmd "cd "${_pwd}"/${ccs_ver}/CalendarServer"
-  execCmd "mkdir conf run logs{,_debug} certs"
+  execCmd "cd "${_pwd}"/${ccs_ver}/CalendarServer"
+  #execCmd "mkdir conf run logs{,_debug} certs"
+  execCmd "mkdir conf"
+  # In a container env, conf as part of the container,
+  # certs, logs & run on the bound volume ${CCS_ROOT}/Calendar and Contacts
+  # that we can't do anything about at the time of creating the container...
   execCmd "${VJPD_FUNCTIONS_SED} \
     -e \"s@/Library/Server/Calendar and Contacts@${CCS_ROOT}/Calendar and Contacts@\" \
     -e 's@<string>/Library/Server/Preferences/Calendar.plist</string>@<!-- & -->@' \
+    -e 's@8008@9008@' \
+    -e 's@8443@9443@' \
     ${_pwd}/${ccs_ver}/ccs-calendarserver/contrib/conf/calendarserver.plist \
     > ${_pwd}/${ccs_ver}/CalendarServer/conf/calendarserver.plist \
     "
   execCmd "cp ${_pwd}/${ccs_ver}/ccs-calendarserver/contrib/conf/org.calendarserver.plist \
     ${_pwd}/${ccs_ver}/CalendarServer/conf \
     "
-
-  # Setup for running in debug mode in VS-Code...
-  execCmd "ln -s /dev/stdout logs_debug/access.log"
-  execCmd "ln -s /dev/stderr logs_debug/error.log"
-  execCmd "${VJPD_FUNCTIONS_SED} \
-    -e 's%CalendarServer/logs%&_debug%' \
-    -e '/<key>RotateAccessLog<\/key>/!b;n;c    <false/>' \
-    -e 's%<string>warn</string>%<string>info</string>%' \
-    conf/calendarserver.plist > conf/calendarserver_debug.plist \
+  execCmd "${VJPD_FUNCTIONS_SED} -i \
+    -e \"s@/Users/calendarserver/CalendarServer@${CCS_ROOT}/Calendar and Contacts@g\" \
+    ${_pwd}/${ccs_ver}/CalendarServer/conf/* \
   "
-  if [[ "${_hostname_s}" =~ "vimes-dev" ]]; then
-    execCmd "/opt/local/bin/svn -u jpritcha co svn://svnserver.vjpd.net/repos/trunk/vjpd/config/mac/CalendarServer/.vscode "${_pwd}"/${ccs_ver}/CalendarServer/.vscode"
-    execCmd "chmod -R g+rwX CalendarServer/"
-  fi
 }
 ################################################################################
 # Create self-signed Certificates
