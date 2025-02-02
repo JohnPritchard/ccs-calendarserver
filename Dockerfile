@@ -39,12 +39,18 @@ RUN bin/linux.Apple_ccs_to_vjpd_ccs_migration --exec pre_build
 RUN bin/linux.Apple_ccs_to_vjpd_ccs_migration --exec build_server
 RUN bin/linux.Apple_ccs_to_vjpd_ccs_migration --exec configure_server
 
-#USER calendarserver
+USER calendarserver
 
 # expose ports...
-#EXPOSE 5000
+EXPOSE 9008
+EXPOSE 9443
 
-#CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
-#CMD ["/usr/bin/bash"]
-CMD ["bash"]
-#CMD ["ls -al", ";", "pwdæ]
+CMD [\
+    "/opt/ccs-calendarserver/CalendarServer/bin/caldavd", \
+    "-X", \
+    "-R", \
+    "kqueue", \
+    "-f", \
+    "/opt/ccs-calendarserver/CalendarServer/conf/calendarserver.plist", \
+]
+#CMD ["ls -al", ";", "pwd"]
