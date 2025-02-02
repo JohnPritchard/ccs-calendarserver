@@ -34,8 +34,6 @@ RUN useradd \
 VOLUME /opt/Calendar\ and\ Contacts
 
 # Install the application dependencies
-RUN rm /bin/sh
-RUN ln -s bash /bin/sh
 COPY bin ./bin/
 RUN chown -R calendarserver:calendarserver /opt/ccs-calendarserver
 
