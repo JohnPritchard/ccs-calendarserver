@@ -51,6 +51,6 @@ CMD [\
     "-R", \
     "kqueue", \
     "-f", \
-    "/opt/ccs-calendarserver/CalendarServer/conf/calendarserver.plist", \
+    "/opt/ccs-calendarserver/CalendarServer/conf/calendarserver.plist" \
 ]
 #CMD ["ls -al", ";", "pwd"]
