@@ -35,7 +35,10 @@ VOLUME /opt/Calendar\ and\ Contacts
 
 # Install the application dependencies
 COPY bin ./bin/
-RUN chown -R calendarserver:calendarserver /opt/ccs-calendarserver
+RUN mkdir -pv /var/run/caldavd
+RUN chown -R calendarserver:calendarserver \
+    /opt/ccs-calendarserver \
+    /var/run/caldavd
 
 USER calendarserver
 
