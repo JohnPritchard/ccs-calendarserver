@@ -53,4 +53,4 @@ CMD [\
     "-f", \
     "/opt/ccs-calendarserver/CalendarServer/conf/calendarserver.plist" \
 ]
-#CMD ["ls -al", ";", "pwd"]
+CMD ["bash"]
