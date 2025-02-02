@@ -34,23 +34,29 @@ RUN useradd \
 VOLUME /opt/Calendar\ and\ Contacts
 
 # Install the application dependencies
+RUN rm /bin/sh
+RUN ln -s bash /bin/sh
 COPY bin ./bin/
+RUN chown -R calendarserver:calendarserver /opt/ccs-calendarserver
+
+USER calendarserver
+
 RUN bin/linux.Apple_ccs_to_vjpd_ccs_migration --exec pre_build
 RUN bin/linux.Apple_ccs_to_vjpd_ccs_migration --exec build_server
 RUN bin/linux.Apple_ccs_to_vjpd_ccs_migration --exec configure_server
-
-#USER calendarserver
 
 # expose ports...
 EXPOSE 9008
 EXPOSE 9443
 
+ENV PATH=/opt/ccs-calendarserver/CalendarServer/bin:/opt/ccs-calendarserver/CalendarServer/virtualenv/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV PYTHON=/opt/ccs-calendarserver/CalendarServer/bin/python
+
 CMD [\
     "/opt/ccs-calendarserver/CalendarServer/bin/caldavd", \
     "-X", \
-    "-R", \
-    "kqueue", \
-    "-f", \
-    "/opt/ccs-calendarserver/CalendarServer/conf/calendarserver.plist" \
+    "-R", "kqueue", \
+    "-f", "/opt/ccs-calendarserver/CalendarServer/conf/calendarserver.plist" \
 ]
+USER root
 CMD ["bash"]
