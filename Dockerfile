@@ -39,7 +39,7 @@ RUN bin/linux.Apple_ccs_to_vjpd_ccs_migration --exec pre_build
 RUN bin/linux.Apple_ccs_to_vjpd_ccs_migration --exec build_server
 RUN bin/linux.Apple_ccs_to_vjpd_ccs_migration --exec configure_server
 
-USER calendarserver
+#USER calendarserver
 
 # expose ports...
 EXPOSE 9008
