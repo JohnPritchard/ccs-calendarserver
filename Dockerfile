@@ -31,7 +31,7 @@ RUN useradd \
     --gid 129 \
     calendarserver
 
-VOLUME /opt/Calendar\ and\ Contacts
+VOLUME /opt/Calendar_and_Contacts
 
 # Install the application dependencies
 COPY bin ./bin/
