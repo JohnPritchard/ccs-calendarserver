@@ -181,7 +181,7 @@ upgrade_database() {
   # If it exists, extract a tgz Archive version of the database...
   if [ ! -z "${ccs_tarfile}" ]; then
     if [ -e "${ccs_tarfile}" ]; then
-      [ -d ${CCS_ROOT}/Calendar\ and\ Contacts ] && execCmd "${_SUDO:+${_SUDO} }rm -fr ${CCS_ROOT}/Calendar\ and\ Contacts"
+      [ -d ${CCS_ROOT}/Calendar_and_Contacts ] && execCmd "${_SUDO:+${_SUDO} }rm -fr ${CCS_ROOT}/Calendar_and_Contacts"
       execCmd "${_SUDO:+${_SUDO} }tar -C ${CCS_ROOT} -zxf '${ccs_tarfile}'"
     else
       errorLog "Could not find '${ccs_tarfile}'"
@@ -189,8 +189,8 @@ upgrade_database() {
     fi
   fi
   # Set ownerships to ${ccs_user} user...
-  if [ -d ${CCS_ROOT}/Calendar\ and\ Contacts ]; then
-    execCmd "${_SUDO:+${_SUDO} }chown -R ${ccs_user}:${ccs_group:-${ccs_user}} ${CCS_ROOT}/Calendar\ and\ Contacts"
+  if [ -d ${CCS_ROOT}/Calendar_and_Contacts ]; then
+    execCmd "${_SUDO:+${_SUDO} }chown -R ${ccs_user}:${ccs_group:-${ccs_user}} ${CCS_ROOT}/Calendar_and_Contacts"
   fi
   if [ -d /var/run/caldavd ]; then
     execCmd "${_SUDO:+${_SUDO} }find /var/run/caldavd -user _calendar -exec chown ${ccs_user}:${ccs_group:-${ccs_user}} {} \\;"
@@ -198,7 +198,7 @@ upgrade_database() {
   fi
 
   # Check postgresql version...
-  if [ -d ${CCS_ROOT}/Calendar\ and\ Contacts ]; then
+  if [ -d ${CCS_ROOT}/Calendar_and_Contacts ]; then
     if [ -e "${CLUSTER}/PG_VERSION" ]; then
       old_PG_VERSION=$(cat "${CLUSTER}/PG_VERSION")
     fi
