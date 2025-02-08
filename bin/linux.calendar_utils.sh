@@ -121,10 +121,10 @@ configure_server() {
   #execCmd "mkdir conf run logs{,_debug} certs"
   execCmd "mkdir conf"
   # In a container env, conf as part of the container,
-  # certs, logs & run on the bound volume ${CCS_ROOT}/Calendar and Contacts
+  # certs, logs & run on the bound volume ${CCS_ROOT}/Calendar_and_Contacts
   # that we can't do anything about at the time of creating the container...
   execCmd "${VJPD_FUNCTIONS_SED} \
-    -e \"s@/Library/Server/Calendar and Contacts@${CCS_ROOT}/Calendar and Contacts@\" \
+    -e \"s@/Library/Server/Calendar and Contacts@${CCS_ROOT}/Calendar_and_Contacts@\" \
     -e 's@<string>/Library/Server/Preferences/Calendar.plist</string>@<!-- & -->@' \
     -e 's@8008@9008@' \
     -e 's@8443@9443@' \
@@ -135,7 +135,7 @@ configure_server() {
     ${_pwd}/${ccs_ver}/CalendarServer/conf \
     "
   execCmd "${VJPD_FUNCTIONS_SED} -i \
-    -e \"s@/Users/calendarserver/CalendarServer@${CCS_ROOT}/Calendar and Contacts@g\" \
+    -e \"s@/Users/calendarserver/CalendarServer@${CCS_ROOT}/Calendar_and_Contacts@g\" \
     ${_pwd}/${ccs_ver}/CalendarServer/conf/* \
   "
 }
@@ -280,7 +280,7 @@ upgrade_database() {
             -E UTF8 \
             2>&1 | tee -a caldav_upgrade_${from_ver}--${to_ver}.log \
             "
-        [ ! -z "${ccs_user}" ] && ${_SUDO:+${_SUDO} }chown -R ${ccs_user}:${ccs_group:-${ccs_user}} "${CCS_ROOT}/Calendar and Contacts"
+        [ ! -z "${ccs_user}" ] && ${_SUDO:+${_SUDO} }chown -R ${ccs_user}:${ccs_group:-${ccs_user}} "${CCS_ROOT}/Calendar_and_Contacts"
         execCmd "${ccs_user:+${_SUDO_ccs_user}} \
           \"${BIN_DIR_to}/pg_upgrade\" -v \
             -U caldav \
