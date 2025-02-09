@@ -15,6 +15,7 @@ RUN apt install -y \
     libsasl2-dev \
     libldap2-dev \
     libtool \
+    passwd \
     pkg-config \
     rsync \
     sudo
