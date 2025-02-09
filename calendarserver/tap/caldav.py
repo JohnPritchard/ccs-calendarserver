@@ -500,7 +500,10 @@ class GroupOwnedUNIXServer(UNIXServer, object):
 
         # Unfortunately, there's no public way to access this. -glyph
         fileName = self._port.port
-        chown(fileName, getuid(), self.gid)
+        try :
+            chown(fileName, getuid(), self.gid)
+        except Exception as e:
+            raise Exception(e+"%s, %s, %s" %(fileName, getuid(), self.gid))
 
 
 class SlaveSpawnerService(Service):
