@@ -103,6 +103,8 @@ build_server() {
   execCmd "env -i PYTHONUSERBASE='ccs-calendarserver/.develop/ve_tools' ${PYTHON:-python} get-pip.py"
   # Build server...
   execCmd "cd ccs-calendarserver"
+  execCmd "rm requirements-dev.txt"
+  execCmd "touch requirements-dev.txt"
   execCmd "env -i \
     PATH=$(getconf PATH) \
     ${PYTHON:+PYTHON=${PYTHON}} \
