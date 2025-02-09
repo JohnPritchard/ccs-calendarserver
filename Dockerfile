@@ -70,8 +70,8 @@ ENV LD_LIBRARY_PATH=/opt/ccs-calendarserver/CalendarServer/lib
 CMD [\
     "/opt/ccs-calendarserver/CalendarServer/bin/caldavd", \
     "-X", \
-    "-R", "kqueue", \
-    "-f", "/opt/ccs-calendarserver/CalendarServer/conf/calendarserver.plist" \
+    "-R", "default", \
+    "-f", "/var/calendarserver/conf/calendarserver.plist" \
 ]
 # sudo -u \#116 bash -x /opt/ccs-calendarserver/CalendarServer/bin/caldavd -X -R kqueue -f /opt/ccs-calendarserver/CalendarServer/conf/calendarserver.plist
 #USER root
