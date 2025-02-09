@@ -32,9 +32,9 @@ RUN useradd \
     --uid 116 \
     --gid 129 \
     calendarserver
-#RUN usermod \
-#    -a -G staff \
-#    calendarserver \
+RUN usermod \
+    -a -G staff \
+    calendarserver
 
 VOLUME /opt/Calendar_and_Contacts
 
