@@ -69,8 +69,8 @@ CMD [\
     "-f", "/opt/ccs-calendarserver/CalendarServer/conf/calendarserver.plist" \
 ]
 # sudo -u \#116 bash -x /opt/ccs-calendarserver/CalendarServer/bin/caldavd -X -R kqueue -f /opt/ccs-calendarserver/CalendarServer/conf/calendarserver.plist
-USER root
+#USER root
 CMD ["bash"]
-# bash -x /opt/ccs-calendarserver/CalendarServer/bin/caldavd -X -R kqueue -f /opt/ccs-calendarserver/CalendarServer/conf/calendarserver.plist
-# bash -x /opt/ccs-calendarserver/CalendarServer/bin/caldavd -X -R default -f /opt/ccs-calendarserver/CalendarServer/conf/calendarserver.plist
+# bash -x /opt/ccs-calendarserver/CalendarServer/bin/caldavd -X -R kqueue -f /var/calendarserver/conf/calendarserver.plist
+# bash -x /opt/ccs-calendarserver/CalendarServer/bin/caldavd -X -R default -f /var/calendarserver/conf/calendarserver.plist
 # git pull ; iid=$(sudo docker images | grep ^apple_ccs\  | awk '{print $3}') ; [ ! -z "$iid" ] && sudo docker rmi --force $iid ; sudo docker buildx build . --tag "apple_ccs" && sudo docker run -it --volume /opt/Calendar_and_Contacts:/opt/Calendar_and_Contacts "apple_ccs"
