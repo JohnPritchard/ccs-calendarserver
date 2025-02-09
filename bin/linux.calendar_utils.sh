@@ -140,11 +140,11 @@ configure_server() {
   "
 
   # nginx reverse proxy configuration
-  mkdir -p /var/calendarserver/etc
-  vi /var/calendarserver/etc/nginx.conf
-  mkdir -p /var/calendarserver/etc/nginx_root
-  vi /var/calendarserver/etc/nginx_root/default.html  # unused, but nginx root is here
-  openssl dhparam -out /var/calendarserver/etc/dhparam.pem 4096
+  #mkdir -p /var/calendarserver/etc
+  #vi /var/calendarserver/etc/nginx.conf
+  #mkdir -p /var/calendarserver/etc/nginx_root
+  #vi /var/calendarserver/etc/nginx_root/default.html  # unused, but nginx root is here
+  #openssl dhparam -out /var/calendarserver/etc/dhparam.pem 4096
 
   ### From...
   ### https://github.com/essandess/macOS-Open-Source-Server/blob/master/macOS%20Server%20Migration%20Notes.md#calendar-and-contacts
