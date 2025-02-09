@@ -65,6 +65,7 @@ EXPOSE 9443
 
 ENV PATH=/opt/ccs-calendarserver/CalendarServer/bin:/opt/ccs-calendarserver/CalendarServer/virtualenv/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 ENV PYTHON=/opt/ccs-calendarserver/CalendarServer/bin/python
+ENV LD_LIBRARY_PATH=/opt/ccs-calendarserver/CalendarServer/lib
 
 CMD [\
     "/opt/ccs-calendarserver/CalendarServer/bin/caldavd", \
