@@ -32,9 +32,9 @@ RUN useradd \
     --uid 116 \
     --gid 129 \
     calendarserver
-RUN usermod \
-    -a -G staff \
-    calendarserver \
+#RUN usermod \
+#    -a -G staff \
+#    calendarserver \
 
 VOLUME /opt/Calendar_and_Contacts
 
@@ -73,7 +73,7 @@ CMD [\
     "-f", "/opt/ccs-calendarserver/CalendarServer/conf/calendarserver.plist" \
 ]
 # sudo -u \#116 bash -x /opt/ccs-calendarserver/CalendarServer/bin/caldavd -X -R kqueue -f /opt/ccs-calendarserver/CalendarServer/conf/calendarserver.plist
-#USER root
+USER root
 CMD ["bash"]
 # bash -x /opt/ccs-calendarserver/CalendarServer/bin/caldavd -X -R kqueue -f /var/calendarserver/conf/calendarserver.plist
 # bash -x /opt/ccs-calendarserver/CalendarServer/bin/caldavd -X -R default -f /var/calendarserver/conf/calendarserver.plist
