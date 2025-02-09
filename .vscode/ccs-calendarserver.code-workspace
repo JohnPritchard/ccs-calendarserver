@@ -1,9 +1,15 @@
 {
 	"folders": [
 		{
+			"name": "ccs-calendarserver",
 			"path": ".."
 		},
 		{
+			"name": "ccs-caldavclientlibrary",
+			"path": "../../ccs-caldavclientlibrary"
+		},
+		{
+			"name": "vjpd",
 			"path": "../../../../../../opt/vjpd"
 		}
 	],
