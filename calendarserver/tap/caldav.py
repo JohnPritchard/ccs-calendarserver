@@ -503,7 +503,7 @@ class GroupOwnedUNIXServer(UNIXServer, object):
         try :
             chown(fileName, getuid(), self.gid)
         except Exception as e:
-            raise Exception(e.str+"%s, %s, %s" %(fileName, getuid(), self.gid))
+            raise Exception(str(e)+"%s, %s, %s" %(fileName, getuid(), self.gid))
 
 
 class SlaveSpawnerService(Service):
