@@ -31,6 +31,9 @@ RUN useradd \
     --uid 116 \
     --gid 129 \
     calendarserver
+RUN useradd \
+    --gid 50 \
+    calendarserver
 
 VOLUME /opt/Calendar_and_Contacts
 
