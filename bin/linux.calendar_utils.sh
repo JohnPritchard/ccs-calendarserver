@@ -109,35 +109,89 @@ build_server() {
     USE_OPENSSL=1 \
     bash -x ./bin/package ${_pwd}/${ccs_ver}/CalendarServer \
     "
+  [ -h "${_pwd}/CalendarServer" ] && execCmd "rm ${_pwd}/CalendarServer"
+  execCmd "ln -fsv ${ccs_ver}/CalendarServer ${_pwd}/CalendarServer"
 }
 ################################################################################
 # Configure
 configure_server() {
   cd ${__pwd}
   _pwd=$(pwd)
-  execCmd "ln -fsv ${ccs_ver}/CalendarServer CalendarServer"
-  execCmd "cd "${_pwd}"/${ccs_ver}/CalendarServer"
-  execCmd "cd "${_pwd}"/${ccs_ver}/CalendarServer"
-  #execCmd "mkdir conf run logs{,_debug} certs"
-  execCmd "mkdir conf"
   # In a container env, conf as part of the container,
   # certs, logs & run on the bound volume ${CCS_ROOT}/Calendar_and_Contacts
   # that we can't do anything about at the time of creating the container...
+  execCmd "mkdir -p /var/calendarserver/conf"
+  execCmd "chown -R calendarserver:calendarserver /var/calendarserver"
+  execCmd "chmod -R 0750 /var/calendarserver"
   execCmd "${VJPD_FUNCTIONS_SED} \
     -e \"s@/Library/Server/Calendar and Contacts@${CCS_ROOT}/Calendar_and_Contacts@\" \
     -e 's@<string>/Library/Server/Preferences/Calendar.plist</string>@<!-- & -->@' \
     -e 's@8008@9008@' \
     -e 's@8443@9443@' \
     ${_pwd}/${ccs_ver}/ccs-calendarserver/contrib/conf/calendarserver.plist \
-    > ${_pwd}/${ccs_ver}/CalendarServer/conf/calendarserver.plist \
+    > /var/calendarserver/conf/calendarserver.plist \
     "
   execCmd "cp ${_pwd}/${ccs_ver}/ccs-calendarserver/contrib/conf/org.calendarserver.plist \
-    ${_pwd}/${ccs_ver}/CalendarServer/conf \
+    /var/calendarserver/conf \
     "
   execCmd "${VJPD_FUNCTIONS_SED} -i \
     -e \"s@/Users/calendarserver/CalendarServer@${CCS_ROOT}/Calendar_and_Contacts@g\" \
-    ${_pwd}/${ccs_ver}/CalendarServer/conf/* \
+    /var/calendarserver/conf/* \
   "
+
+  # nginx reverse proxy configuration
+  mkdir -p /var/calendarserver/etc
+  vi /var/calendarserver/etc/nginx.conf
+  mkdir -p /var/calendarserver/etc/nginx_root
+  vi /var/calendarserver/etc/nginx_root/default.html  # unused, but nginx root is here
+  openssl dhparam -out /var/calendarserver/etc/dhparam.pem 4096
+
+  ### From...
+  ### https://github.com/essandess/macOS-Open-Source-Server/blob/master/macOS%20Server%20Migration%20Notes.md#calendar-and-contacts
+  if false ; then
+# Configuration
+mkdir -p /var/calendarserver/Library/CalendarServer/Config
+chgrp _calendar /var/calendarserver/Library/CalendarServer/Config
+chmod 0750 /var/calendarserver/Library/CalendarServer/Config
+
+# Logs
+mkdir -p /var/calendarserver/Library/CalendarServer/logs
+chgrp _calendar /var/calendarserver/Library/CalendarServer/logs
+chmod 0750 /var/calendarserver/Library/CalendarServer/logs
+
+# PostgreSQL
+mkdir -p /var/calendarserver/Library/CalendarServer/Data/Database
+chgrp -R _calendar /var/calendarserver/Library/CalendarServer/Data
+chmod -R 0700 /var/calendarserver/Library/CalendarServer/Data
+
+# calendarserver config file
+vi /var/calendarserver/Library/CalendarServer/Config/calendarserver.plist
+
+# nginx reverse proxy configuration
+mkdir -p /var/calendarserver/Library/CalendarServer/etc
+vi /var/calendarserver/Library/CalendarServer/etc/nginx.conf
+mkdir -p /var/calendarserver/Library/CalendarServer/etc/nginx_root
+vi /var/calendarserver/Library/CalendarServer/etc/nginx_root/default.html  # unused, but nginx root is here
+openssl dhparam -out /var/calendarserver/Library/CalendarServer/etc/dhparam.pem 4096
+
+# Launch daemons
+mkdir -p /var/calendarserver/Library/CalendarServer/Config/LaunchDaemons
+vi /var/calendarserver/Library/CalendarServer/Config/LaunchDaemons/org.calendarserver.calendarserver.plist
+vi /var/calendarserver/Library/CalendarServer/Config/LaunchDaemons/org.calendarserver.nginx_proxy.plist
+
+# ccs-calendarserver's postgres code points to `PSQL = "../postgresql/_root/bin/psql"`
+mkdir -p /var/calendarserver/Library/CalendarServer/postgresql
+ln -s /opt/local /var/calendarserver/Library/CalendarServer/postgresql/_root
+
+  sudo sh -x <<CALENDARSERVER_SPECIFICS
+mkdir /var/run/caldavd
+chown -R calendarserver:_calendar /var/run/caldavd
+chmod 0770 /var/run/caldavd
+mkdir /var/run/caldavd_requests
+chown -R calendarserver:_calendar /var/run/caldavd_requests
+chmod -R 0770 /var/run/caldavd_requests
+CALENDARSERVER_SPECIFICS
+  fi
 }
 ################################################################################
 # Create self-signed Certificates
