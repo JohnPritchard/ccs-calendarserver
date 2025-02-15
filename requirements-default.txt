@@ -4,5 +4,5 @@
 
 --requirement requirements-cs.txt
 --requirement requirements-twisted-default.txt
---requirement requirements-twisted-osx.txt
+#--requirement requirements-twisted-osx.txt
 --requirement requirements-dev.txt
