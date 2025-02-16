@@ -100,7 +100,12 @@ build_server() {
   # Install pip
   execCmd "mkdir ccs-calendarserver/.develop/ve_tools"
   execCmd "curl https://bootstrap.pypa.io/pip/2.7/get-pip.py -o get-pip.py"
-  execCmd "env -i PYTHONUSERBASE='ccs-calendarserver/.develop/ve_tools' ${PYTHON:-python} get-pip.py"
+  execCmd "env -i \
+    PYTHONUSERBASE='ccs-calendarserver/.develop/ve_tools' \
+    ${PYTHON:-python} \
+    ${LD_LIBRARY_PATH:+LD_LIBRARY_PATH=${LD_LIBRARY_PATH}} \
+    get-pip.py
+  "
   # Build server...
   execCmd "cd ccs-calendarserver"
   execCmd "rm requirements-dev.txt"
@@ -108,9 +113,10 @@ build_server() {
   execCmd "env -i \
     PATH=$(getconf PATH) \
     ${PYTHON:+PYTHON=${PYTHON}} \
+    ${LD_LIBRARY_PATH:+LD_LIBRARY_PATH=${LD_LIBRARY_PATH}} \
     USE_OPENSSL=1 \
     bash -x ./bin/package ${_pwd}/${ccs_ver}/CalendarServer \
-    "
+  "
   [ -h "${_pwd}/CalendarServer" ] && execCmd "rm ${_pwd}/CalendarServer"
   execCmd "ln -fsv ${ccs_ver}/CalendarServer ${_pwd}/CalendarServer"
 }
