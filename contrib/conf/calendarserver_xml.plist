@@ -130,6 +130,10 @@
         <true/>
     </dict>
 
+    <!-- Data root -->
+    <key>DataRoot</key>
+    <string>Data.macOS</string>
+
     <!-- Database root -->
     <key>DatabaseRoot</key>
     <string>Database.xpg</string>
