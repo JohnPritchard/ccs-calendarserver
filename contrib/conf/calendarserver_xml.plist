@@ -497,7 +497,7 @@
     <key>Includes</key>
     <array>
         <!-- This plist tells us where the Calendar and Contacts data lives:-->
-        <!-- <string>/Library/Server/Preferences/Calendar.plist</string> -->
+        <string>/Library/Server/Preferences/Calendar.plist</string>
     </array>
 
   </dict>
