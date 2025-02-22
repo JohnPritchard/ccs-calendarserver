@@ -132,12 +132,9 @@ configure_server() {
   execCmd "chown -R calendarserver:calendarserver /var/calendarserver"
   execCmd "chmod -R 0750 /var/calendarserver"
   execCmd "${VJPD_FUNCTIONS_SED} \
-    -e 's@/Users/calendarserver/CalendarServer/conf/auth/@/var/calendarserver/conf/auth/@' \
     -e \"s@/Library/Server/Calendar and Contacts@${CCS_ROOT}/Calendar_and_Contacts@\" \
     -e 's@Data.macOS@Data.linux@' \
     -e 's@  \(<string>/Library/Server/Preferences/Calendar.plist</string>\)@  <!-- \1 -->@' \
-    -e 's@8008@9008@' \
-    -e 's@8443@9443@' \
     ${_pwd}/${ccs_ver}/ccs-calendarserver/contrib/conf/calendarserver_xml.plist \
     > /var/calendarserver/conf/calendarserver_xml.plist \
   "
@@ -145,7 +142,8 @@ configure_server() {
     /var/calendarserver/conf \
   "
   execCmd "${VJPD_FUNCTIONS_SED} -i \
-    -e \"s@/Users/calendarserver/CalendarServer@${CCS_ROOT}/Calendar_and_Contacts@g\" \
+      -e \"s@/Users/calendarserver/CalendarServer@${CCS_ROOT}/Calendar_and_Contacts@g\" \
+    -e \"s@/${CCS_ROOT}/Calendar_and_Contacts/conf/auth/@/var/calendarserver/conf/auth/@g\" \
     /var/calendarserver/conf/*.plist \
   "
 
