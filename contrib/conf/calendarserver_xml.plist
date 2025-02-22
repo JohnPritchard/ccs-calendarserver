@@ -62,11 +62,11 @@
         Paths to certificate files
  
     <key>SSLCertificate</key>
-    <string>/Users/calendarserver/CalendarServer/certs/calendarserver.cert.pem</string>
+    <string>/Library/Server/Calendar and Contacts/certs/calendarserver.cert.pem</string>
     <key>SSLPrivateKey</key>
-    <string>/Users/calendarserver/CalendarServer/certs/calendarserver.key.pem</string>
+    <string>/Library/Server/Calendar and Contacts/certs/calendarserver.key.pem</string>
     <key>SSLAuthorityChain</key>
-    <string>/Users/calendarserver/CalendarServer/certs/calendarserver.chain.pem</string>
+    <string>/Library/Server/Calendar and Contacts/certs/calendarserver.chain.pem</string>
    -->
 
     <!--
@@ -105,7 +105,7 @@
 
     <!-- Server root, overridden by /Library/Server/Preferences/Calendar.plist -->
     <key>ServerRoot</key>
-    <string>/opt/Calendar and Contacts</string>
+    <string>/Library/Server/Calendar and Contacts</string>
 
     <!-- No features - when macOS supports postgres 9.5 and up change
          this to include 'skip-locked'. -->
@@ -125,7 +125,7 @@
         <key>ClusterName</key>
         <string>cluster.pg</string>
         <key>SocketDirectory</key>
-        <string>/Users/calendarserver/CalendarServer/run/PostgresSocket</string>
+        <string>/Library/Server/Calendar and Contacts/run/PostgresSocket</string>
         <key>LogRotation</key>
         <true/>
     </dict>
@@ -140,11 +140,11 @@
 
     <!-- Configuration root -->
     <key>ConfigRoot</key>
-    <string>/Users/calendarserver/CalendarServer/conf</string>
+    <string>/Library/Server/Calendar and Contacts/conf</string>
 
     <!-- Log root -->
     <key>LogRoot</key>
-    <string>/Users/calendarserver/CalendarServer/logs</string>
+    <string>/Library/Server/Calendar and Contacts/logs</string>
 
     <!--
         Quotas and limits
@@ -204,7 +204,7 @@
       <key>params</key>
       <dict>
         <key>xmlFile</key>
-        <string>/Users/calendarserver/CalendarServer/conf/auth/vjpd-accounts.xml</string>
+        <string>/Library/Server/Calendar and Contacts/conf/auth/vjpd-accounts.xml</string>
       </dict>
     </dict>
 
@@ -230,7 +230,6 @@
 
     <!-- XML File Augment Service -->
 <!--
--->
     <key>AugmentService</key>
     <dict>
       <key>type</key>
@@ -240,10 +239,11 @@
       <dict>
         <key>xmlFiles</key>
         <array>
-          <string>/Users/calendarserver/CalendarServer/conf/augments.xml</string>
+          <string>/Library/Server/Calendar and Contacts/conf/augments.xml</string>
         </array>
       </dict>
     </dict>
+-->
 
     <key>DirectoryRealmName</key>
     <string>VJPD Realm</string>
