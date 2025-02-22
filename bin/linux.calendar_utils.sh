@@ -133,7 +133,7 @@ configure_server() {
   execCmd "chmod -R 0750 /var/calendarserver"
   execCmd "${VJPD_FUNCTIONS_SED} \
     -e \"s@/Library/Server/Calendar and Contacts@${CCS_ROOT}/Calendar_and_Contacts@\" \
-    -e \"s@/Users/calendarserver/CalendarServer/conf/auth/@/var/calendarserver/conf/auth/@ \
+    -e 's@/Users/calendarserver/CalendarServer/conf/auth/@/var/calendarserver/conf/auth/@' \
     -e 's@<string>/Library/Server/Preferences/Calendar.plist</string>@<!-- & -->@' \
     -e 's@8008@9008@' \
     -e 's@8443@9443@' \
