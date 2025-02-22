@@ -132,10 +132,10 @@ configure_server() {
   execCmd "chown -R calendarserver:calendarserver /var/calendarserver"
   execCmd "chmod -R 0750 /var/calendarserver"
   execCmd "${VJPD_FUNCTIONS_SED} \
-    -e \"s@/Library/Server/Calendar and Contacts@${CCS_ROOT}/Calendar_and_Contacts@\" \
     -e 's@/Users/calendarserver/CalendarServer/conf/auth/@/var/calendarserver/conf/auth/@' \
+    -e \"s@/Library/Server/Calendar and Contacts@${CCS_ROOT}/Calendar_and_Contacts@\" \
     -e 's@Data.macOS@Data.linux@' \
-    -e 's@<string>/Library/Server/Preferences/Calendar.plist</string>@<!-- & -->@' \
+    -e 's@  \(<string>/Library/Server/Preferences/Calendar.plist</string>\)@  <!-- \1 -->@' \
     -e 's@8008@9008@' \
     -e 's@8443@9443@' \
     ${_pwd}/${ccs_ver}/ccs-calendarserver/contrib/conf/calendarserver_xml.plist \
@@ -146,7 +146,7 @@ configure_server() {
   "
   execCmd "${VJPD_FUNCTIONS_SED} -i \
     -e \"s@/Users/calendarserver/CalendarServer@${CCS_ROOT}/Calendar_and_Contacts@g\" \
-    /var/calendarserver/conf/* \
+    /var/calendarserver/conf/*.plist \
   "
 
   # nginx reverse proxy configuration
