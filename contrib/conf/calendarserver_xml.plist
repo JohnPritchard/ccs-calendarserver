@@ -200,7 +200,7 @@
       <key>params</key>
       <dict>
         <key>xmlFile</key>
-        <string>/Users/calendarserver/CalendarServer/conf/vjpd-accounts.xml</string>
+        <string>/Users/calendarserver/CalendarServer/conf/auth/vjpd-accounts.xml</string>
       </dict>
     </dict>
 
