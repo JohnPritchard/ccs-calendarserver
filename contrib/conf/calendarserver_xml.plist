@@ -204,7 +204,7 @@
       <key>params</key>
       <dict>
         <key>xmlFile</key>
-        <string>/Library/Server/Calendar and Contacts/conf/auth/vjpd-accounts.xml</string>
+        <string>/Library/Server/Calendar and Contacts/auth/accounts.xml</string>
       </dict>
     </dict>
 
@@ -246,7 +246,7 @@
 -->
 
     <key>DirectoryRealmName</key>
-    <string>VJPD Realm</string>
+    <string>CCS Realm</string>
 
     <key>DirectoryFilterStartsWith</key>
     <true/>

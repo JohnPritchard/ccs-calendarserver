@@ -129,11 +129,10 @@ configure_server() {
   # certs, logs & run on the bound volume ${CCS_ROOT}/Calendar and Contacts
   # that we can't do anything about at the time of creating the container...
   [ -d "/var/calendarserver/conf" ] && execCmd "rm -fr /var/calendarserver/conf"
-  execCmd "mkdir -p /var/calendarserver/conf"
+  execCmd "mkdir -p /var/calendarserver/{auth,certs,conf,run,logs}"
   execCmd "chown    calendarserver:calendarserver /var/calendarserver"
   execCmd "chown -R calendarserver:calendarserver /var/calendarserver/conf"
-  execCmd "chmod    0750 /var/calendarserver"
-  execCmd "chmod -R 0750 /var/calendarserver/conf"
+  execCmd "chmod -R 0750 /var/calendarserver"
   execCmd "${VJPD_FUNCTIONS_SED} \
     -e \"s@>/Library/Server/Calendar and Contacts<@>/opt/Calendar and Contatcs<@\" \
     -e \"s@/Library/Server/Calendar and Contacts/@/var/calendarserver/@\" \
