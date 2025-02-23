@@ -134,7 +134,7 @@ configure_server() {
   execCmd "chown -R calendarserver:calendarserver /var/calendarserver/conf"
   execCmd "chmod -R 0750 /var/calendarserver"
   execCmd "${VJPD_FUNCTIONS_SED} \
-    -e \"s@>/Library/Server/Calendar and Contacts<@>/opt/Calendar and Contatcs<@\" \
+    -e \"s@>/Library/Server/Calendar and Contacts<@>/opt/Calendar and Contacts<@\" \
     -e \"s@/Library/Server/Calendar and Contacts/@/var/calendarserver/@\" \
     -e 's@Data.macOS@Data.linux@' \
     -e 's@  \(<string>/Library/Server/Preferences/Calendar.plist</string>\)@  <!-- \1 -->@' \
