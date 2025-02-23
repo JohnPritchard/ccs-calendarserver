@@ -36,7 +36,8 @@ RUN usermod \
     -a -G staff \
     calendarserver
 
-VOLUME /opt/Calendar_and_Contacts
+VOLUME /opt/Calendar\ and\ Contacts
+VOLUME /var/calendarserver/auth
 
 # Install the application dependencies
 COPY bin ./bin/
@@ -60,9 +61,10 @@ USER calendarserver
 #RUN bin/linux.Apple_ccs_to_vjpd_ccs_migration --exec configure_server
 
 # expose ports...
-EXPOSE 9008
-EXPOSE 9443
+EXPOSE 8008
+#EXPOSE 9443
 
+USER root
 ENV PATH=/opt/ccs-calendarserver/CalendarServer/bin:/opt/ccs-calendarserver/CalendarServer/virtualenv/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 ENV PYTHON=/opt/ccs-calendarserver/CalendarServer/bin/python
 ENV LD_LIBRARY_PATH=/opt/ccs-calendarserver/CalendarServer/lib
@@ -73,13 +75,4 @@ CMD [\
     "-R", "default", \
     "-f", "/var/calendarserver/conf/calendarserver.plist" \
 ]
-# sudo -u \#116 bash -x /opt/ccs-calendarserver/CalendarServer/bin/caldavd -X -R kqueue -f /opt/ccs-calendarserver/CalendarServer/conf/calendarserver.plist
-#USER root
 CMD ["bash"]
-# bash -x /opt/ccs-calendarserver/CalendarServer/bin/caldavd -X -R kqueue -f /var/calendarserver/conf/calendarserver_xml.plist
-# bash -x /opt/ccs-calendarserver/CalendarServer/bin/caldavd -X -R default -f /var/calendarserver/conf/calendarserver_xml.plist
-# tail -n 30 /opt/Calendar_and_Contacts/Logs/error.log
-# git pull ; iid=$(sudo docker images | grep ^apple_ccs\  | awk '{print $3}') ; [ ! -z "$iid" ] && sudo docker rmi --force $iid ; sudo docker buildx build . --tag "apple_ccs" && sudo docker run -it --volume /opt/Calendar_and_Contacts:/opt/Calendar_and_Contacts "apple_ccs"
-# Force rebuild --no-cache
-# git pull ; iid=$(sudo docker images | grep ^apple_ccs\  | awk '{print $3}') ; [ ! -z "$iid" ] && sudo docker rmi --force $iid ; sudo docker buildx build --no-cache . --tag "apple_ccs" && sudo docker run -it --volume /opt/Calendar_and_Contacts:/opt/Calendar_and_Contacts "apple_ccs"
-# sudo docker run -it --volume /opt/Calendar_and_Contacts:/opt/Calendar_and_Contacts "apple_ccs"

@@ -398,3 +398,45 @@ ${_SUDO:+${_SUDO} }launchctl unload -w /Library/LaunchDaemons/org.calendarserver
 "
 }
 ################################################################################
+if false ; then
+## -----------------------------------------------------------------------------
+## Inside the CCS container
+bash -x \
+  /opt/ccs-calendarserver/CalendarServer/bin/caldavd \
+    -X \
+    -R kqueue \
+    -f /var/calendarserver/conf/calendarserver_xml.plist
+bash -x \
+  /opt/ccs-calendarserver/CalendarServer/bin/caldavd \
+    -X \
+    -R default \
+    -f /var/calendarserver/conf/calendarserver_xml.plist
+tail -n 30 /var/calendarserver/logs/error.log
+
+## -----------------------------------------------------------------------------
+# In the container host
+## Build and run...
+git pull ; \
+  iid=$(sudo docker images | grep ^apple_ccs\  | awk '{print $3}') ; \
+  [ ! -z "$iid" ] && sudo docker rmi --force $iid ; \
+  sudo docker buildx build . --tag "apple_ccs" && \
+    sudo docker run -it \
+      --volume /opt/Calendar_and_Contacts:/opt/Calendar_and_Contacts \
+      "apple_ccs"
+## Build and run...
+# Force rebuild --no-cache
+git pull ; \
+  iid=$(sudo docker images | grep ^apple_ccs\  | awk '{print $3}') ; \
+  [ ! -z "$iid" ] && sudo docker rmi --force $iid ; \
+  sudo docker buildx build --no-cache . --tag "apple_ccs" && \
+    sudo docker run -it \
+      --volume /opt/Calendar\ and\ Contacts:/opt/Calendar\ and\ Contacts \
+      --volume /var/ccs_secure/ccs-calendarserver/conf/auth:/var/calendarserver/auth \
+      "apple_ccs"
+## Run...
+sudo docker run -it \
+  --volume /opt/Calendar\ and\ Contacts:/opt/Calendar\ and\ Contacts \
+  --volume /var/ccs_secure/ccs-calendarserver/conf/auth:/var/calendarserver/auth \
+  "apple_ccs"
+## -----------------------------------------------------------------------------
+fi
