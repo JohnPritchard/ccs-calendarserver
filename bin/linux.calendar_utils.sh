@@ -126,13 +126,17 @@ configure_server() {
   cd ${__pwd}
   _pwd=$(pwd)
   # In a container env, conf as part of the container,
-  # certs, logs & run on the bound volume ${CCS_ROOT}/Calendar_and_Contacts
+  # certs, logs & run on the bound volume ${CCS_ROOT}/Calendar and Contacts
   # that we can't do anything about at the time of creating the container...
+  [ -d "/var/calendarserver/conf" ] && execCmd "rm -fr /var/calendarserver/conf"
   execCmd "mkdir -p /var/calendarserver/conf"
-  execCmd "chown -R calendarserver:calendarserver /var/calendarserver"
-  execCmd "chmod -R 0750 /var/calendarserver"
+  execCmd "chown    calendarserver:calendarserver /var/calendarserver"
+  execCmd "chown -R calendarserver:calendarserver /var/calendarserver/conf"
+  execCmd "chmod    0750 /var/calendarserver"
+  execCmd "chmod -R 0750 /var/calendarserver/conf"
   execCmd "${VJPD_FUNCTIONS_SED} \
-    -e \"s@/Library/Server/Calendar and Contacts@${CCS_ROOT}/Calendar_and_Contacts@\" \
+    -e \"s@>/Library/Server/Calendar and Contacts<@>/var/calendarserver<@\" \
+    -e \"s@/Library/Server/Calendar and Contacts/@/var/calendarserver/@\" \
     -e 's@Data.macOS@Data.linux@' \
     -e 's@  \(<string>/Library/Server/Preferences/Calendar.plist</string>\)@  <!-- \1 -->@' \
     ${_pwd}/${ccs_ver}/ccs-calendarserver/contrib/conf/calendarserver_xml.plist \
@@ -140,11 +144,6 @@ configure_server() {
   "
   execCmd "cp ${_pwd}/${ccs_ver}/ccs-calendarserver/contrib/conf/org.calendarserver.plist \
     /var/calendarserver/conf \
-  "
-  execCmd "${VJPD_FUNCTIONS_SED} -i \
-      -e \"s@/Users/calendarserver/CalendarServer@${CCS_ROOT}/Calendar_and_Contacts@g\" \
-    -e \"s@/${CCS_ROOT}/Calendar_and_Contacts/conf/auth/@/var/calendarserver/conf/auth/@g\" \
-    /var/calendarserver/conf/*.plist \
   "
 
   # nginx reverse proxy configuration
@@ -243,7 +242,7 @@ upgrade_database() {
   # If it exists, extract a tgz Archive version of the database...
   if [ ! -z "${ccs_tarfile}" ]; then
     if [ -e "${ccs_tarfile}" ]; then
-      [ -d ${CCS_ROOT}/Calendar_and_Contacts ] && execCmd "${_SUDO:+${_SUDO} }rm -fr ${CCS_ROOT}/Calendar_and_Contacts"
+      [ -d ${CCS_ROOT}/Calendar and Contacts ] && execCmd "${_SUDO:+${_SUDO} }rm -fr ${CCS_ROOT}/Calendar and Contacts"
       execCmd "${_SUDO:+${_SUDO} }tar -C ${CCS_ROOT} -zxf '${ccs_tarfile}'"
     else
       errorLog "Could not find '${ccs_tarfile}'"
@@ -251,8 +250,8 @@ upgrade_database() {
     fi
   fi
   # Set ownerships to ${ccs_user} user...
-  if [ -d ${CCS_ROOT}/Calendar_and_Contacts ]; then
-    execCmd "${_SUDO:+${_SUDO} }chown -R ${ccs_user}:${ccs_group:-${ccs_user}} ${CCS_ROOT}/Calendar_and_Contacts"
+  if [ -d ${CCS_ROOT}/Calendar and Contacts ]; then
+    execCmd "${_SUDO:+${_SUDO} }chown -R ${ccs_user}:${ccs_group:-${ccs_user}} ${CCS_ROOT}/Calendar and Contacts"
   fi
   if [ -d /var/run/caldavd ]; then
     execCmd "${_SUDO:+${_SUDO} }find /var/run/caldavd -user _calendar -exec chown ${ccs_user}:${ccs_group:-${ccs_user}} {} \\;"
@@ -260,7 +259,7 @@ upgrade_database() {
   fi
 
   # Check postgresql version...
-  if [ -d ${CCS_ROOT}/Calendar_and_Contacts ]; then
+  if [ -d ${CCS_ROOT}/Calendar and Contacts ]; then
     if [ -e "${CLUSTER}/PG_VERSION" ]; then
       old_PG_VERSION=$(cat "${CLUSTER}/PG_VERSION")
     fi
@@ -342,7 +341,7 @@ upgrade_database() {
             -E UTF8 \
             2>&1 | tee -a caldav_upgrade_${from_ver}--${to_ver}.log \
             "
-        [ ! -z "${ccs_user}" ] && ${_SUDO:+${_SUDO} }chown -R ${ccs_user}:${ccs_group:-${ccs_user}} "${CCS_ROOT}/Calendar_and_Contacts"
+        [ ! -z "${ccs_user}" ] && ${_SUDO:+${_SUDO} }chown -R ${ccs_user}:${ccs_group:-${ccs_user}} "${CCS_ROOT}/Calendar and Contacts"
         execCmd "${ccs_user:+${_SUDO_ccs_user}} \
           \"${BIN_DIR_to}/pg_upgrade\" -v \
             -U caldav \
