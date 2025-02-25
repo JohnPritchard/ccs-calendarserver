@@ -707,13 +707,15 @@ py_dependencies () {
     bootstrap_virtualenv;
     export
     pwd
+    _PYTHONUSERBASE=${PYTHONUSERBASE}
+    unset PYTHONUSERBASE
     "${bootstrap_python}" -m virtualenv  \
       --system-site-packages             \
       ${virtualenv_opts}                 \
       "${py_virtualenv}";
     #  --no-setuptools                    \
     #codesign -s - -f "${py_virtualenv}"/bin/python
-    #unset PYTHONUSERBASE
+    export PYTHONUSERBASE=${_PYTHONUSERBASE}
     if [ "${use_openssl}" = "false" ]; then
       # Interacting with keychain requires either a valid code signature, or no
       # code signature. An *invalid* code signature won't work.
