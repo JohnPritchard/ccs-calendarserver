@@ -717,6 +717,7 @@ py_dependencies () {
     if [ "${use_openssl}" = "false" ]; then
       # Interacting with keychain requires either a valid code signature, or no
       # code signature. An *invalid* code signature won't work.
+if false ; then
       if ! ad_hoc_sign_if_code_signature_is_invalid ${python}; then
         cat << EOF
 SecureTransport support is enabled, but we are unable to validate or fix the
@@ -726,6 +727,7 @@ OpenSSL, delete the .develop directory, export USE_OPENSSL=1, then run
 ./bin/develop again.
 EOF
       fi;
+fi
     fi;
   fi;
 
