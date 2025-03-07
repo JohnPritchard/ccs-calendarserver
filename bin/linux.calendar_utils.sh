@@ -107,6 +107,7 @@ build_server() {
     ${CFLAGS:+CFLAGS=${CFLAGS}} \
     get-pip.py
   "
+  set -x
   # Build server...
   execCmd "cd ccs-calendarserver"
   execCmd "rm requirements-dev.txt"
