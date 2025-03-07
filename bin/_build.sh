@@ -450,7 +450,7 @@ c_dependency () {
 
   export              PATH="${dstroot}/bin:${PATH}";
   export    C_INCLUDE_PATH="${dstroot}/include:${C_INCLUDE_PATH:-}";
-  export            CFLAGS="${CFLAGS:-}";
+  export            CFLAGS="-I/opt/ccs-calendarserver/miniconda3/envs/py27/include";
   export   LD_LIBRARY_PATH="${dstroot}/lib:${dstroot}/lib64:${LD_LIBRARY_PATH:-}";
   export          CPPFLAGS="-I${dstroot}/include ${CPPFLAGS:-} ";
   export           LDFLAGS="-L${dstroot}/lib -L${dstroot}/lib64 ${LDFLAGS:-} ";
