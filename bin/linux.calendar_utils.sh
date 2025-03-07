@@ -82,7 +82,7 @@ build_server() {
   else
     execCmd "cd git/ccs-calendarserver-${ccs_ver}"
     execCmd "git pull"
-    execCmd "cd"
+    execCmd "cd ${_pwd}"
   fi
 
   cd "${_pwd}"
