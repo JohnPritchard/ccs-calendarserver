@@ -104,7 +104,7 @@ build_server() {
   execCmd "env -i \
     ${PYTHON:-python} \
     ${LD_LIBRARY_PATH:+LD_LIBRARY_PATH=${LD_LIBRARY_PATH}} \
-    ${C_INCLUDE_PATH:+C_INCLUDE_PATH=${C_INCLUDE_PATH}} \
+    ${CFLAGS:+CFLAGS=${CFLAGS}} \
     get-pip.py
   "
   set -x
@@ -116,7 +116,7 @@ build_server() {
     PATH=$(getconf PATH) \
     ${PYTHON:+PYTHON=${PYTHON}} \
     ${LD_LIBRARY_PATH:+LD_LIBRARY_PATH=${LD_LIBRARY_PATH}} \
-    ${C_INCLUDE_PATH:+C_INCLUDE_PATH=${C_INCLUDE_PATH}} \
+    ${CFLAGS:+CFLAGS=${CFLAGS}} \
     USE_OPENSSL=1 \
     bash -x ./bin/package ${_pwd}/${ccs_ver}/CalendarServer \
   "
