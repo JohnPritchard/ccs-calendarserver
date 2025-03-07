@@ -806,7 +806,7 @@ bootstrap_virtualenv () {
   for pkg in              \
       setuptools==44.1.1  \
       pip==20.3.4         \
-      virtualenv==20.7.2  \
+      virtualenv==20.15.1 \
   ; do
       ruler "Installing ${pkg}";
       "${bootstrap_python}" -m pip install -I ${NESTED} "${pkg}";
