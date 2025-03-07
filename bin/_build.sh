@@ -747,8 +747,13 @@ fi
 
   ruler "Preparing Python requirements";
   echo "";
-  export
   pwd
+  cd ../CalendarServer/roots/CyrusSASL/include
+  ln -sv sasl/* .
+  ls -al
+  cd "${wd}";
+  pwd
+  export
   "${pip_install}" --prefix="${py_virtualenv}" --requirement="${requirements}";
   #"${pip_install}" --requirement="${requirements}";
 
