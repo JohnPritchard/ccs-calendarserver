@@ -450,12 +450,13 @@ c_dependency () {
 
   export              PATH="${dstroot}/bin:${PATH}";
   export    C_INCLUDE_PATH="${dstroot}/include:${C_INCLUDE_PATH:-}";
-  export            CFLAGS="${CFLAGS}";
+  export            CFLAGS="${CFLAGS:-}";
   export   LD_LIBRARY_PATH="${dstroot}/lib:${dstroot}/lib64:${LD_LIBRARY_PATH:-}";
   export          CPPFLAGS="-I${dstroot}/include ${CPPFLAGS:-} ";
   export           LDFLAGS="-L${dstroot}/lib -L${dstroot}/lib64 ${LDFLAGS:-} ";
   export DYLD_LIBRARY_PATH="${dstroot}/lib:${dstroot}/lib64:${DYLD_LIBRARY_PATH:-}";
   export   PKG_CONFIG_PATH="${dstroot}/lib/pkgconfig:${PKG_CONFIG_PATH:-}";
+read -p "enter " dummy
 
   if "${do_setup}"; then
     if "${force_setup}"; then
