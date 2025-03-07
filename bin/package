@@ -159,6 +159,7 @@ main () {
   cat > "${dst}/environment.sh" << __EOF__
 export              PATH="${dst}/bin:\${PATH}";
 export    C_INCLUDE_PATH="${dst}/include:\${C_INCLUDE_PATH:-}";
+export            CFLAGS="${CFLAGS:-}";
 export   LD_LIBRARY_PATH="${dst}/lib:${dst}/lib64:\${LD_LIBRARY_PATH:-}:\$ORACLE_HOME";
 export          CPPFLAGS="-I${dst}/include \${CPPFLAGS:-} ";
 export           LDFLAGS="-L${dst}/lib -L${dst}/lib64 \${LDFLAGS:-} ";
