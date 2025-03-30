@@ -457,7 +457,6 @@ c_dependency () {
   export DYLD_LIBRARY_PATH="${dstroot}/lib:${dstroot}/lib64:${DYLD_LIBRARY_PATH:-}";
   export   PKG_CONFIG_PATH="${dstroot}/lib/pkgconfig:${PKG_CONFIG_PATH:-}";
 export
-read -p "enter " dummy
 
   if "${do_setup}"; then
     if "${force_setup}"; then
@@ -751,12 +750,16 @@ fi
   ruler "Preparing Python requirements";
   echo "";
   pwd
-  cd ../CalendarServer/roots/CyrusSASL/include
-  ln -sv sasl/* .
-  ls -al
-  cd "${wd}";
+  if [ -d ../CalendarServer/roots/CyrusSASL/include ]; then
+    cd ../CalendarServer/roots/CyrusSASL/include
+    ln -sv sasl/* .
+    ls -al
+    cd "${wd}";
+  fi
   pwd
   export
+  read -p "<Enter> " _d
+
   "${pip_install}" --prefix="${py_virtualenv}" --requirement="${requirements}";
   #"${pip_install}" --requirement="${requirements}";
 
