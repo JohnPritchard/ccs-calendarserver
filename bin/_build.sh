@@ -625,7 +625,10 @@ c_dependencies () {
     local n="memcached";
     local p="${n}-${v}";
 
-    c_dependency -s "d5490856170453b15a782ad55ffdea188c2eade0" \
+    # 1.6.23
+    #c_dependency -s "d5490856170453b15a782ad55ffdea188c2eade0" \
+    # 1.6.38
+    c_dependency -s "2d132faaf4d4ffa4c1b5f55b2f09056a0e9181dd" \
       "memcached" "${p}" \
       "http://www.memcached.org/files/${p}.tar.gz" \
       "--disable-docs";
