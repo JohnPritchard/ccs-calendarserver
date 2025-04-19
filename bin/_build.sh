@@ -626,9 +626,13 @@ c_dependencies () {
     local p="${n}-${v}";
 
     # 1.6.23
-    #c_dependency -s "d5490856170453b15a782ad55ffdea188c2eade0" \
+    local v="1.6.23";
+    local mc_sum="d5490856170453b15a782ad55ffdea188c2eade0" \
     # 1.6.38
-    c_dependency -s "2d132faaf4d4ffa4c1b5f55b2f09056a0e9181dd" \
+    #local v="1.6.38";
+    #local mc_sum="2d132faaf4d4ffa4c1b5f55b2f09056a0e9181dd" \
+    c_dependency \
+      -s $mc_sum \
       "memcached" "${p}" \
       "http://www.memcached.org/files/${p}.tar.gz" \
       "--disable-docs";
