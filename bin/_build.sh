@@ -621,9 +621,7 @@ c_dependencies () {
       "https://github.com/libevent/libevent/releases/download/release-${v}/${p}.tar.gz" \
       ${configure_openssl};
 
-    local v="1.6.38";
-    local n="memcached";
-    local p="${n}-${v}";
+
 
     # 1.6.23
     local v="1.6.23";
@@ -631,6 +629,11 @@ c_dependencies () {
     # 1.6.38
     #local v="1.6.38";
     #local mc_sum="2d132faaf4d4ffa4c1b5f55b2f09056a0e9181dd" \
+
+    #local v="1.6.38";
+    local n="memcached";
+    local p="${n}-${v}";
+
     c_dependency \
       -s $mc_sum \
       "memcached" "${p}" \
