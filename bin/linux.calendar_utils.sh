@@ -87,6 +87,7 @@ build_server() {
 
   cd "${_pwd}"
   for D in ${ccs_ver} ccs-calendarserver CalendarServer ; do
+    [ -e $D ] && echo "Removing $D..."
     [ -d $D ] && execCmd "rm -fr $D"
     [ -h $D ] && execCmd "rm $D"
   done
