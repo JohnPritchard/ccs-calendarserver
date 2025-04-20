@@ -86,7 +86,7 @@ build_server() {
   fi
 
   cd "${_pwd}"
-  for D in ${ccs_ver} ccs-calendarserver CalendarServer CalendarServer-${ccs_ver} ; do
+  for D in ${ccs_ver} ccs-calendarserver CalendarServer ; do
     [ -d $D ] && execCmd "rm -fr $D"
     [ -h $D ] && execCmd "rm $D"
   done
@@ -110,8 +110,10 @@ build_server() {
   set -x
   # Build server...
   execCmd "cd ccs-calendarserver"
-  execCmd "rm requirements-dev.txt"
-  execCmd "touch requirements-dev.txt"
+  if [ $(uname -s) != 'Darwin' ]; then
+    execCmd "mv requirements-dev.txt requirements-dev.txt.disabled"
+    execCmd "touch requirements-dev.txt"
+  fi
   execCmd "env -i \
     PATH=$(getconf PATH) \
     ${PYTHON:+PYTHON=${PYTHON}} \
