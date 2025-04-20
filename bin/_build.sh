@@ -630,7 +630,7 @@ c_dependencies () {
     local v="1.6.38";
     local mc_sum="2d132faaf4d4ffa4c1b5f55b2f09056a0e9181dd" \
 
-    #local v="1.6.38";
+    local v="1.6.38";
     local n="memcached";
     local p="${n}-${v}";
 
