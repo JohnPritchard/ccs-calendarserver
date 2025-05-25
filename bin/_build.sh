@@ -770,7 +770,7 @@ fi
   fi
   pwd
   export
-  read -p "<Enter> " _d
+  #read -p "<Enter> " _d
 
   "${pip_install}" --prefix="${py_virtualenv}" --requirement="${requirements}";
   #"${pip_install}" --requirement="${requirements}";
