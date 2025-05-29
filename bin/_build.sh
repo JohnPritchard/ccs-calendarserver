@@ -624,13 +624,13 @@ c_dependencies () {
 
 
     # 1.6.23
-    #local v="1.6.23";
-    #local mc_sum="d5490856170453b15a782ad55ffdea188c2eade0" \
+    local v="1.6.23";
+    local mc_sum="d5490856170453b15a782ad55ffdea188c2eade0" \
     # 1.6.38
-    local v="1.6.38";
-    local mc_sum="2d132faaf4d4ffa4c1b5f55b2f09056a0e9181dd" \
+    #local v="1.6.38";
+    #local mc_sum="2d132faaf4d4ffa4c1b5f55b2f09056a0e9181dd" \
 
-    local v="1.6.38";
+    #local v="1.6.38";
     local n="memcached";
     local p="${n}-${v}";
 
